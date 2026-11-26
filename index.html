@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indian Polity Prelims Booster — All 319 Questions Interactive Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    /* Custom scrollbar for question grid & topic strip */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .option-card {
+      transition: all 0.15s ease-in-out;
+    }
+    .option-card:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+    .grid-btn {
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .grid-btn:hover {
+      transform: scale(1.06);
+    }
+    .whitespace-pre-line-clean {
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-extrabold text-lg shadow-inner">
+          IP
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight leading-tight">
+            Indian Polity Prelims Booster (All 319 Qs)
+          </h1>
+          <p class="text-xs text-slate-400">
+            Target 2026–27 • Complete PDF Question Bank with Official Keys & Explanations
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+        <!-- Auto-Save Status Pill -->
+        <span id="saveIndicator" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Auto-Saved
+        </span>
+
+        <!-- Mode Toggle -->
+        <div class="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700 text-xs">
+          <button id="modePracticeBtn" onclick="setMode('practice')" class="px-3 py-1.5 rounded-lg font-semibold transition bg-indigo-600 text-white shadow">
+            Practice Mode
+          </button>
+          <button id="modeExamBtn" onclick="setMode('exam')" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-300 hover:text-white">
+            Exam Mode
+          </button>
+        </div>
+
+        <!-- Submit / Results Button -->
+        <button id="submitQuizBtn" onclick="showResultsView()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold shadow transition">
+          Submit & Analytics
+        </button>
+
+        <!-- Reset Progress Button -->
+        <button onclick="openResetModal()" class="px-3 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-200 hover:text-white border border-rose-500/40 text-xs sm:text-sm font-semibold transition">
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div class="bg-slate-800/90 border-t border-slate-700/80">
+      <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+          <label for="categorySelect" class="text-xs font-semibold uppercase tracking-wider text-slate-400 whitespace-nowrap">
+            Topic Filter:
+          </label>
+          <select id="categorySelect" onchange="changeCategory(this.value)" class="w-full sm:max-w-md bg-slate-900 text-white text-xs sm:text-sm rounded-xl px-3 py-2 border border-slate-600 focus:outline-none focus:border-indigo-500">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <!-- Quick Stats Strip -->
+        <div class="flex items-center gap-4 text-xs text-slate-300">
+          <span>Answered: <strong id="topAnsweredCount" class="text-emerald-400">0</strong>/<span id="topTotalCount">319</span></span>
+          <span>Marked: <strong id="topMarkedCount" class="text-amber-400">0</strong></span>
+          <span id="practiceLiveScoreWrap">Score: <strong id="topScoreCount" class="text-indigo-300">0</strong></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Quiz Container -->
+  <main id="quizWorkspace" class="max-w-7xl w-full mx-auto px-4 py-6 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- Left Column: Question Area (8 cols on desktop) -->
+    <section class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-7">
+      <!-- Top Meta Row -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="qNumberBadge" class="px-3 py-1 rounded-lg bg-indigo-50 text-indigo-700 font-bold text-xs sm:text-sm border border-indigo-100">
+            Question 1 of 319
+          </span>
+          <span id="qCategoryBadge" class="px-3 py-1 rounded-lg bg-slate-100 text-slate-700 font-medium text-xs">
+            Constitutional Development in British India
+          </span>
+        </div>
+        <span id="qExamSourceBadge" class="text-xs font-medium text-slate-500 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
+          U.P.P.C.S. (Pre.) 2023
+        </span>
+      </div>
+
+      <!-- Question Prompt -->
+      <div id="questionText" class="text-base sm:text-lg font-semibold text-slate-900 leading-relaxed mb-6 whitespace-pre-line-clean">
+        Loading question...
+      </div>
+
+      <!-- Options List -->
+      <div id="optionsContainer" class="space-y-3 mb-6">
+        <!-- Options injected dynamically -->
+      </div>
+
+      <!-- Instant Explanation Panel (Visible in Practice Mode after answering, or after submission) -->
+      <div id="explanationBox" class="hidden rounded-xl p-4 mb-6 border text-sm leading-relaxed">
+        <div class="flex items-center justify-between mb-1.5">
+          <span id="explanationStatusTitle" class="font-bold text-sm"></span>
+          <span id="officialKeyBadge" class="text-xs font-semibold px-2 py-0.5 rounded bg-white/80 border"></span>
+        </div>
+        <p id="explanationText" class="text-slate-700"></p>
+      </div>
+
+      <!-- Bottom Action Controls -->
+      <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm transition disabled:opacity-40 disabled:cursor-not-allowed">
+            ← Previous
+          </button>
+          <button id="nextBtn" onclick="navigateQuestion(1)" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-sm transition disabled:opacity-40 disabled:cursor-not-allowed">
+            Next →
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="markReviewBtn" onclick="toggleMarkReview()" class="px-3.5 py-2.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-xs sm:text-sm transition">
+            ★ Mark for Review
+          </button>
+          <button id="clearResponseBtn" onclick="clearCurrentResponse()" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 font-semibold text-xs sm:text-sm transition">
+            Clear Choice
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Question Navigation Grid (4 cols on desktop) -->
+    <aside class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sticky top-28">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-bold text-slate-800 text-sm sm:text-base">Question Palette</h2>
+        <span id="gridFilterCount" class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
+          319 Qs
+        </span>
+      </div>
+
+      <!-- Color Legend -->
+      <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="w-3.5 h-3.5 rounded bg-emerald-500 inline-block"></span>
+          <span>Answered (<strong id="legendAnswered">0</strong>)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3.5 h-3.5 rounded bg-amber-400 inline-block"></span>
+          <span>Marked (<strong id="legendMarked">0</strong>)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3.5 h-3.5 rounded ring-2 ring-indigo-600 bg-indigo-100 inline-block"></span>
+          <span>Current</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-3.5 h-3.5 rounded bg-slate-200 inline-block"></span>
+          <span>Unanswered (<strong id="legendUnanswered">319</strong>)</span>
+        </div>
+      </div>
+
+      <!-- Palette Filter Pills -->
+      <div class="flex items-center gap-1.5 mb-3 text-xs">
+        <button onclick="setPaletteFilter('all')" id="palAll" class="px-2.5 py-1 rounded-lg bg-slate-800 text-white font-medium">All</button>
+        <button onclick="setPaletteFilter('unanswered')" id="palUnanswered" class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Unanswered</button>
+        <button onclick="setPaletteFilter('marked')" id="palMarked" class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium">Marked</button>
+      </div>
+
+      <!-- Scrollable Number Grid -->
+      <div id="questionGrid" class="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-6 gap-2 max-h-[380px] overflow-y-auto pr-1">
+        <!-- Grid buttons injected dynamically -->
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100">
+        <button onclick="showResultsView()" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition shadow-sm">
+          Finish & View Detailed Report
+        </button>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Detailed Results & Analytics View (Hidden until submitted) -->
+  <section id="resultsWorkspace" class="hidden max-w-7xl w-full mx-auto px-4 py-6 flex-1 space-y-6">
+    <!-- Summary Banner -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-100">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+            Performance Scorecard
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">
+            Indian Polity Prelims Assessment Report
+          </h2>
+          <p class="text-sm text-slate-500 mt-1">
+            Evaluated against official PDF Answer Keys across all 14 Polity topics.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <button onclick="backToQuiz()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow transition">
+            ← Resume / Edit Quiz
+          </button>
+          <button onclick="openResetModal()" class="px-4 py-2.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-sm transition">
+            Reset All Progress
+          </button>
+        </div>
+      </div>
+
+      <!-- 5 KPI Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6">
+        <div class="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-100">
+          <p class="text-xs font-semibold text-indigo-600 uppercase">Total Questions</p>
+          <p id="resTotalQs" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">319</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-100">
+          <p class="text-xs font-semibold text-emerald-700 uppercase">Correct Answers</p>
+          <p id="resCorrect" class="text-2xl sm:text-3xl font-extrabold text-emerald-700 mt-1">0</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-rose-50/70 border border-rose-100">
+          <p class="text-xs font-semibold text-rose-700 uppercase">Incorrect Answers</p>
+          <p id="resIncorrect" class="text-2xl sm:text-3xl font-extrabold text-rose-700 mt-1">0</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200">
+          <p class="text-xs font-semibold text-slate-600 uppercase">Unattempted</p>
+          <p id="resSkipped" class="text-2xl sm:text-3xl font-extrabold text-slate-700 mt-1">319</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 col-span-2 sm:col-span-1">
+          <p class="text-xs font-semibold text-amber-800 uppercase">Accuracy (Attempted)</p>
+          <p id="resAccuracy" class="text-2xl sm:text-3xl font-extrabold text-amber-700 mt-1">0%</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category-wise Breakdown Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <h3 class="text-lg font-bold text-slate-900 mb-4">Topic-Wise Performance Breakdown (14 Categories)</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-slate-200 text-xs uppercase text-slate-500 bg-slate-50">
+              <th class="py-3 px-4 rounded-tl-xl">Topic / PDF Section</th>
+              <th class="py-3 px-3 text-center">Total</th>
+              <th class="py-3 px-3 text-center">Correct</th>
+              <th class="py-3 px-3 text-center">Wrong</th>
+              <th class="py-3 px-3 text-center">Skipped</th>
+              <th class="py-3 px-4 rounded-tr-xl">Mastery</th>
+            </tr>
+          </thead>
+          <tbody id="categoryBreakdownBody" class="divide-y divide-slate-100">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Question-by-Question Detailed Review -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Detailed Question-by-Question Review & Explanations</h3>
+          <p class="text-xs text-slate-500">Filter by status or topic to inspect official PDF keys and explanations.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <select id="reviewCategoryFilter" onchange="renderDetailedReview()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-700">
+            <option value="ALL">All 14 Topics</option>
+          </select>
+          <button onclick="setReviewFilter('all')" id="revFilterAll" class="px-3 py-2 rounded-xl bg-slate-900 text-white font-semibold">All</button>
+          <button onclick="setReviewFilter('incorrect')" id="revFilterIncorrect" class="px-3 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 font-semibold">Incorrect</button>
+          <button onclick="setReviewFilter('correct')" id="revFilterCorrect" class="px-3 py-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">Correct</button>
+          <button onclick="setReviewFilter('skipped')" id="revFilterSkipped" class="px-3 py-2 rounded-xl bg-slate-100 text-slate-700 font-semibold">Skipped</button>
+        </div>
+      </div>
+
+      <div id="detailedReviewList" class="space-y-4">
+        <!-- Detailed review cards injected here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Custom Reset Confirmation Modal (No alert/confirm used) -->
+  <div id="resetModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+      <h3 class="text-lg font-bold text-slate-900">Reset All Saved Quiz Progress?</h3>
+      <p class="text-sm text-slate-600 mt-2">
+        This will clear all your selected answers, marked-for-review flags, and saved position across all 319 questions. This action cannot be undone.
+      </p>
+      <div class="mt-6 flex items-center justify-end gap-3">
+        <button onclick="closeResetModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50">
+          Cancel
+        </button>
+        <button onclick="confirmResetProgress()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm shadow">
+          Yes, Reset Everything
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ============================================================================
+// COMPLETE 319-QUESTION INDIAN POLITY DATABASE (EXACT QUESTIONS & PDF KEYS)
+// ============================================================================
+const CATEGORIES = [
+  "1. Constitutional Development in British India",
+  "2. Constituent Assembly & Making of Constitution",
+  "3. Important Committees of Constituent Assembly",
+  "4. Sources of the Constitution",
+  "5. Parts of the Indian Constitution",
+  "6. Articles of the Constitution",
+  "7. Schedules of the Constitution",
+  "8. The Preamble",
+  "9. The Citizenship",
+  "10. States and the Union Territories",
+  "11. Fundamental Rights",
+  "12. Directive Principles of State Policy",
+  "13. The Governance System",
+  "14. Constitutional Amendment"
+];
+
+// Compact format: [categoryIndex, examSource, questionText, [optA, optB, optC, optD], correctIndex (0=a,1=b,2=c,3=d, -1=star/disputed), explanation]
+const RAW_QUESTIONS = [
+  // ================= 1. Constitutional Development in British India (15 Qs) =================
+  [0, "U.P.P.C.S. (Pre.) 2023", "1. By which of the following Acts, the system of 'Chamber of Princes' with 120 members was created?", ["(a) Act of 1919", "(b) Act of 1793", "(c) Act of 1909", "(d) Charter Act of 1853"], 0, "The Government of India Act, 1919 led to the establishment of the Chamber of Princes (Narendra Mandal) in 1921 with 120 members to provide a forum for rulers of princely states."],
+  [0, "U.P.R.O./A.R.O. (Pre) 2021", "2. With reference to Indian Civil Services, which of the following statements is/are correct?\n1. Government of India Act, 1919 provided for a separate examination for the Indian Civil Service, which was to be held in India.\n2. In the Indian Civil Service in 1941, the percentage of Indians was more as compared to the Europeans.\nSelect the correct answer using the code given below:", ["(a) Only 1", "(b) Only 2", "(c) Both 1 and 2", "(d) Neither 1 nor 2"], 2, "Both statements are correct. The GOI Act 1919 introduced simultaneous ICS examinations in India (first held in Allahabad in 1922), and by 1941 Indians outnumbered Europeans in the ICS."],
+  [0, "U.P.R.O./A.R.O. (Mains) 2017", "3. By which Act, the British Parliament had abolished the monopoly of East India Company's trade in India except for Tea and China trade?", ["(a) Charter Act of 1813", "(b) Charter Act of 1833", "(c) Charter Act of 1853", "(d) Charter Act of 1873"], 0, "The Charter Act of 1813 ended the trade monopoly of the East India Company in India, retaining its monopoly only over trade in tea and trade with China."],
+  [0, "U.P. Lower Sub. (Pre) 2015", "4. Why is the Government of India Act, 1935 important?", ["(a) It is the main source of the Constitution of India", "(b) It gave Independence to India", "(c) It envisages partition of India", "(d) It abolished the Native States"], 0, "More than two-thirds of the Constitution of India (federal scheme, judiciary, governors, emergency provisions, public service commissions) is derived from the Government of India Act, 1935."],
+  [0, "U.P.P.C.S. (Pre) 2014", "5. By which one of the following Acts was the Federal Court established in India?", ["(a) The Indian Councils Act, 1861", "(b) The Government of India Act, 1909", "(c) The Government of India Act, 1919", "(d) None of the above"], 3, "The Federal Court of India was established in 1937 under the provisions of the Government of India Act, 1935 (hence 'None of the above')."],
+  [0, "U.P. P.C.S. (Mains) 2013", "6. A 'Federal System' and 'diarchy' at the 'Centre' was introduced in India by", ["(a) The Act of 1909", "(b) The Act of 1919", "(c) The Act of 1935", "(d) None of the above"], 2, "The Government of India Act, 1935 abolished dyarchy in the provinces and introduced dyarchy at the Centre along with an All-India Federation."],
+  [0, "U.P.P.C.S.(Pre) 2012", "7. Which Act for the first time made it possible for Indians to take some share in the administration of their country?", ["(a) Charter Act, 1833", "(b) Charter Act, 1853", "(c) Government of India Act, 1858", "(d) Indian Councils Act, 1861"], 0, "Section 87 of the Charter Act of 1833 declared that no Indian subject of the Company would be debarred from holding any office by reason of religion, place of birth, descent, or colour."],
+  [0, "U.P.P.C.S (Mains) 2011", "8. Which one of the following Acts led to the separation of Burma from India?", ["(a) The Indian Councils Act, 1909", "(b) Government of India Act, 1919", "(c) Government of India Act, 1935", "(d) Indian Independence Act, 1947"], 2, "Under the Government of India Act, 1935, Burma (now Myanmar) was separated from British India with effect from April 1, 1937."],
+  [0, "U.P.P.C.S. (Mains) 2010", "9. In which of the following Acts, the provision was made for the establishment of Supreme Court at Calcutta?", ["(a) Regulating Act, 1773", "(b) Pitt's India Act, 1784", "(c) Charter Act, 1813", "(d) Charter Act, 1833"], 0, "The Regulating Act of 1773 provided for the establishment of a Supreme Court at Fort William, Calcutta (established in 1774 with Sir Elijah Impey as Chief Justice)."],
+  [0, "U.P.P.C.S. (Mains) 2010", "10. Which one of the following is not an important and permanent constituent in the Government of India Act, 1935?", ["(a) A written Constitution for the country", "(b) Elected representatives responsible to the Legislature", "(c) Envisaging a scheme of Federation", "(d) Nomination of official members to the Legislature"], 0, "The Government of India Act, 1935 did not provide a written Constitution framed by Indians for an independent country."],
+  [0, "U.P.P.C.S. (Mains) 2008", "11. The Indian Legislature was made bicameral for the first time by", ["(a) Indian Council Act of 1892", "(b) Indian Council Act of 1909", "(c) The Government of India Act of 1919", "(d) The Government of India Act of 1935"], 2, "The Government of India Act, 1919 replaced the Indian Legislative Council with a bicameral legislature consisting of an Upper House (Council of State) and a Lower House (Legislative Assembly)."],
+  [0, "U.P.P.C.S. (Mains) 2008", "12. The power of the President to issue ordinance is a relic of", ["(a) G.O.I. Act, 1919", "(b) G.O.I. Act, 1935", "(c) G.O.I. Act, 1909", "(d) Indian Independence Act, 1947"], 1, "Article 123 of the Indian Constitution empowering the President to promulgate ordinances is directly inspired by Section 42 of the Government of India Act, 1935."],
+  [0, "U.P. P.C.S. (Pre) 2008", "13. Under which Act was 'Dyarchy' established at the Centre?", ["(a) The Act of 1909", "(b) The Government of India Act, 1919", "(c) The Government of India Act, 1935", "(d) The Indian Independence Act, 1947"], 2, "The Government of India Act, 1935 provided for the adoption of dyarchy at the Centre by dividing federal subjects into Reserved and Transferred subjects."],
+  [0, "U.P.P.C.S (Pre) 2003; U.P. U.D.A./L.D.A. (Pre) 2002", "14. Match list-I with list-II and select the correct answer from the code given below the lists:\nList-I:\nA. Establishment of Board of Control\nB. Establishment of Supreme Court\nC. Permission to English Missionaries to work in India\nD. Appointment of Law Member in Governor-General Council\nList-II:\n1. Regulating Act, 1773\n2. Pitt's India Act, 1784\n3. Charter Act, 1813\n4. Charter Act, 1833", ["(a) A-1, B-2, C-3, D-4", "(b) A-2, B-1, C-3, D-4", "(c) A-1, B-2, C-4, D-3", "(d) A-2, B-4, C-1, D-3"], 1, "Board of Control: Pitt's India Act 1784 (2); Supreme Court: Regulating Act 1773 (1); Missionaries: Charter Act 1813 (3); Law Member (Macaulay): Charter Act 1833 (4)."],
+  [0, "U.P. P.C.S (Pre) 2003", "15. Under which of the following Act, Legislative Council of India received the power to discuss the budget?", ["(a) Indian Council Act, 1861", "(b) Indian Council Act, 1892", "(c) Indian Council Act, 1909", "(d) Government of India Act, 1919"], 1, "The Indian Councils Act of 1892 increased the functions of legislative councils and gave them the power of discussing the budget and addressing questions to the executive."],
+
+  // ================= 2. Constituent Assembly & Making of Constitution (24 Qs) =================
+  [1, "U.P.P.C.S. (Pre.) 2023", "1. Consider the following events and arrange these in correct chronological order starting from the earliest to the last activity:\n(I) Appointment of the Drafting Committee\n(II) Indian Constitution was adopted and enacted\n(III) Date of commencement of Indian Constitution\n(IV) Constituent Assembly first met\nSelect the correct answer from the code given below:", ["(a) IV, I, II, III", "(b) I, II, IV, III", "(c) IV, I, III, II", "(d) III, II, I, IV"], 0, "Chronological order: First meeting of Constituent Assembly (9 Dec 1946 - IV) -> Drafting Committee appointed (29 Aug 1947 - I) -> Adopted & enacted (26 Nov 1949 - II) -> Commencement (26 Jan 1950 - III)."],
+  [1, "U.P.P.C.S. (Pre) 2022", "2. The first Interim National Government was announced on", ["(a) 24 August 1946", "(b) 22 August 1946", "(c) 25 August 1946", "(d) 23 August 1946"], 0, "The formation of the first Interim National Government of India was announced on 24 August 1946 and it assumed office on 2 September 1946."],
+  [1, "U.P.P.S.C. (GIC) 2017; U.P. U.D.A./L.D.A. (Pre) 2001", "3. Who presented the idea of the Indian Constituent Assembly in pre independence days?", ["(a) M.N. Roy", "(b) B.R. Ambedkar", "(c) Annie Besant", "(d) Jawaharlal Nehru"], 0, "M.N. Roy, a pioneer of the communist movement in India, first put forward the idea of a Constituent Assembly for India in 1934."],
+  [1, "U.P. Lower Sub. (Pre) 2015", "4. Who among the following persons was not a member of the Cabinet Mission?", ["(a) William Wood", "(b) Pethick-Lawrence", "(c) Stafford Cripps", "(d) A.V. Alexander"], 0, "The Cabinet Mission (1946) consisted of three British cabinet members: Lord Pethick-Lawrence, Sir Stafford Cripps, and A.V. Alexander. William Wood was not a member."],
+  [1, "U.P. Lower Sub. (Pre) 1998; U.P.P.C.S. (Pre) 2014", "5. Who was the Constitutional Advisor at the time of the formation of the Constitution?", ["(a) Dr. B.R. Ambedkar", "(b) Dr. Rajendra Prasad", "(c) B.N. Rau", "(d) K.M. Munshi"], 2, "Sir Benegal Narsing Rau (B.N. Rau) served as the Constitutional Advisor to the Constituent Assembly."],
+  [1, "U.P.P.S.C. (R.I.) 2014", "6. When did the third reading of the Indian Constitution start in the Constituent Assembly? (Official Key marked * — historically 17th November 1949)", ["(a) 14th November, 1949", "(b) 14th November, 1948", "(c) 25th November, 1948", "(d) 25th November, 1949"], -1, "Note: Marked (*) in official answer key because the third reading actually began on 17th November 1949 and concluded on 26th November 1949."],
+  [1, "U.P.P.S.C. (R.I.) 2014", "7. How many women members were there in the Indian Constituent Assembly?", ["(a) 15", "(b) 13", "(c) 12", "(d) 10"], 0, "There were 15 women members in the Constituent Assembly of India, including Sarojini Naidu, Hansa Mehta, Durgabai Deshmukh, Rajkumari Amrit Kaur, and Sucheta Kripalani."],
+  [1, "U.P.U.D.A./L.D.A. (Pre) 2013", "8. \"Constituent Assembly was Congress and Congress was India\" who said this?", ["(a) Austin", "(b) C.R. Attlee", "(c) Winston Churchill", "(d) Lord Mountbatten"], 0, "Constitutional historian Granville Austin remarked in his book 'The Indian Constitution: Cornerstone of a Nation' that 'The Constituent Assembly was Congress and Congress was India.'"],
+  [1, "U.P. P.C.S. (Mains) 2012", "9. The Constitution of India was enacted on 26 November, 1949 by the", ["(a) Constituent Assembly", "(b) Governor General of India", "(c) Parliament of India", "(d) British Parliament"], 0, "As stated in the Preamble, the people of India in their Constituent Assembly adopted, enacted, and gave to themselves the Constitution on 26 November 1949."],
+  [1, "U.P.P.C.S (Mains) 2011; U.P.P.C.S. (Pre) 1990, 1995", "10. Constituent Assembly of India was established on:", ["(a) 10 June, 1946", "(b) 09 December, 1946", "(c) 26 November, 1949", "(d) 26 December, 1949"], 1, "The Constituent Assembly held its first sitting on 9 December 1946, marking its formal establishment and commencement of proceedings."],
+  [1, "U.P.P.C.S. (Mains) 2011", "11. Who amongst the following advised that the Indian National Congress should be disbanded as a political party after the independence of India?", ["(a) C. Rajagopalachari", "(b) Jai Prakash Narayan", "(c) Acharya Kripalani", "(d) Mahatma Gandhi"], 3, "Mahatma Gandhi suggested that the Indian National Congress had fulfilled its purpose of achieving independence and should be disbanded as a political party and transformed into a Lok Sevak Sangh."],
+  [1, "U.P.P.C.S. (Spl) (Mains) 2008; U.P. U.D.A./L.D.A. (Pre) 2010", "12. The proposal for framing of the Constitution of India by an elected Constituent Assembly was made by", ["(a) Simon Commission", "(b) Government of India Act, 1935", "(c) Cripps Mission", "(d) British Cabinet Delegation"], 2, "The Cripps Mission (1942), headed by Sir Stafford Cripps, was the first British proposal to accept the framing of an Indian Constitution by an elected Constituent Assembly after World War II."],
+  [1, "U.P.P.C.S. (Mains) 2010", "13. Who of the following was not the member of the Interim National Government formed in August 1946 A.D.?", ["(a) C. Rajagopalachari", "(b) Dr. Rajendra Prasad", "(c) Dr. S. Radhakrishnan", "(d) Jagjiwan Ram"], 2, "Dr. S. Radhakrishnan was not a member of the Interim Government formed in 1946; C. Rajagopalachari, Dr. Rajendra Prasad, and Jagjivan Ram were all cabinet ministers."],
+  [1, "U.P.P.C.S. (Mains) 2010", "14. In relation to formation of the Constitution of India which of the following sentences is/are correct-\n1. Resolution of objectives by Nehru, which was accepted by the constituent Assembly, affected the making of the Constitution.\n2. Preamble fulfils various important objectives.\n3. Peoples of India ordered/directed the Constitution\n4. Head of the state is elected by the people directly.", ["(a) 1, 2 and 3", "(b) 1, 3 and 4", "(c) 2, 3 and 4", "(d) All of the above"], 0, "Statements 1, 2, and 3 are correct. Statement 4 is incorrect because the Head of the State (President of India) is elected indirectly by an electoral college, not directly by the people."],
+  [1, "U.P.P.C.S. (Pre) 2002; U.P.P.C.S. (Mains) 2010", "15. The Constitution of India was completed on:", ["(a) January 26, 1950", "(b) November 26, 1949", "(c) February 11, 1948", "(d) None of the above is correct"], 1, "The drafting and enactment of the Constitution of India was completed on November 26, 1949."],
+  [1, "U.P. Lower Sub. (Pre) 2009", "16. Indian Constituent Assembly was established under -", ["(a) Government of India Act, 1935", "(b) Cripps Mission, 1942", "(c) Cabinet Mission, 1946", "(d) Indian Independence Act, 1947"], 2, "The Constituent Assembly of India was constituted in November 1946 under the scheme formulated by the Cabinet Mission Plan, 1946."],
+  [1, "U.P. Lower (Pre) 2009", "17. The first draft of the Constitution was prepared by-", ["(a) B.R. Ambedkar", "(b) B.N. Rau", "(c) K. Santhanam", "(d) K.M. Munshi"], 1, "The initial/first draft of the Indian Constitution was prepared by Constitutional Advisor B.N. Rau in October 1947, which was then scrutinized and revised by the Drafting Committee chaired by Dr. B.R. Ambedkar."],
+  [1, "U.P. P.C.S. (Spl) (Mains) 2008", "18. Here are two statements:\nStatement (A): The Constitution of India provides for all necessities of the country.\nReason (R): It is known or called as 'Adopted' Constitution.\nIn relation to aforesaid which one is true?", ["(a) (A) and (R) both are true and (R) is correct explanation of (A).", "(b) (A) and (R) both are true but (R) is not the correct explanation of (A).", "(c) (A) is true but (R) is wrong.", "(d) (A) is wrong but (R) is true."], 1, "Both Statement (A) and Reason (R) are true independently, but (R) is not the correct explanation of (A)."],
+  [1, "U.P. P.C.S. (Mains) 2005", "19. How many sessions of the Indian Constituent Assembly were conducted for the formulation of Indian Constitution?", ["(a) 7", "(b) 9", "(c) 12", "(d) 15"], 2, "Including the final session on 24 January 1950 when members signed the Constitution, a total of 12 sessions (11 regular + 1 special sitting) were held."],
+  [1, "U.P.P.C.S. (Spl) (Mains) 2004", "20. \"In their nationalist reaction, the Founding Fathers of Indian Constitution tended to minimize the importance of minority interests and emotions.\" This view is credited to:", ["(a) Morris Jones", "(b) Hardgrave Junior", "(c) Alexandrovitz", "(d) Ivor Jennings"], 3, "British constitutionalist Sir Ivor Jennings made this observation regarding the Indian Constituent Assembly's approach to minority provisions."],
+  [1, "U.P. P.C.S (Pre) 2001, 2003; U.P. U.D.A./L.D.A. (Pre) 2002", "21. As per Cabinet Mission plan, in the Constituent Assembly to decide allotted members seat in each province, one representative was in ratio to which population?", ["(a) 8 Lakh", "(b) 10 Lakh", "(c) 12 Lakh", "(d) 15 Lakh"], 1, "Under the Cabinet Mission Plan, seats were allotted to each province and princely state roughly in the ratio of one seat for every 10 lakh (1 million) population."],
+  [1, "U.P.P.C.S. (Pre) 1998", "22. The resolution for giving a Constitution to India was adopted by the Constituent Assembly on:", ["(a) 22 January, 1946", "(b) 22 January, 1947", "(c) 20 February, 1947", "(d) 26 July, 1946"], 1, "The historic Objectives Resolution, moved by Jawaharlal Nehru on 13 December 1946, was unanimously adopted by the Constituent Assembly on 22 January 1947."],
+  [1, "U.P.P.C.S. (Pre) 1993", "23. How were the members of Constituent Assembly elected?", ["(a) Directly by public", "(b) Nominated by Congress", "(c) Nominated by Indian ruler", "(d) By Provincial Assemblies"], 3, "Members representing British Indian provinces were elected indirectly by the members of the Provincial Legislative Assemblies using proportional representation by single transferable vote."],
+  [1, "U.P.P.C.S. (Pre) 1990", "24. Who chaired the first meeting of Constituent Assembly?", ["(a) Dr. Rajendra Prasad", "(b) Dr. Bhimrao Ambedkar", "(c) Dr. Sachchidanand Sinha", "(d) Maulana Abul Kalam Azad"], 2, "Dr. Sachchidanand Sinha, being the oldest member, was elected as the temporary President and chaired the first meeting on 9 December 1946."],
+
+  // ================= 3. Important Committees of Constituent Assembly (5 Qs) =================
+  [2, "U.P.P.C.S. (Pre) 2025", "1. Match List - I with List - II and choose the correct answer using the code given below the lists:\nList I (Committees of Constituent Assembly):\nA. Union Constitution Committee\nB. Rules of Procedure Committee\nC. Drafting Committee\nD. Fundamental Rights Sub-committee\nList - II (Chairman):\n1. Dr. Rajendra Prasad\n2. J. B. Kripalani\n3. Dr. B. R. Ambedkar\n4. Jawaharlal Nehru", ["(a) A-2, B-1, C-3, D-4", "(b) A-1, B-4, C-3, D-2", "(c) A-4, B-1, C-3, D-2", "(d) A-1, B-2, C-3, D-4"], 2, "Union Constitution Committee: Jawaharlal Nehru (4); Rules of Procedure: Dr. Rajendra Prasad (1); Drafting Committee: Dr. B.R. Ambedkar (3); Fundamental Rights Sub-committee: J.B. Kripalani (2)."],
+  [2, "U.P.P.C.S. (Mains) 2008", "2. Who was the Chairman of the Provincial Constitution Committee of the Constituent Assembly?", ["(a) Dr. B.R. Ambedkar", "(b) Pt. Jawahar Lal Nehru", "(c) Dr. Rajendra Prasad", "(d) Sardar Patel"], 3, "Sardar Vallabhbhai Patel chaired the Provincial Constitution Committee as well as the Advisory Committee on Fundamental Rights, Minorities and Tribal and Excluded Areas."],
+  [2, "U.P. Lower Sub. (Pre) 2008", "3. The Drafting Committee of the Constituent Assembly under Dr. B. R. Ambedkar had how many other members?", ["(a) 7", "(b) 6", "(c) 5", "(d) 4"], 1, "The Drafting Committee consisted of 7 members in total: Chairman Dr. B.R. Ambedkar plus 6 other members (N. Gopalaswami Ayyangar, Alladi Krishnaswamy Ayyar, Dr. K.M. Munshi, Syed Mohammad Saadullah, N. Madhava Rau, and T.T. Krishnamachari)."],
+  [2, "U.P.P.C.S. (Mains) 2008", "4. The Constituent Assembly set up a Drafting Committee under the Chairmanship of Dr. B.R. Ambedkar on", ["(a) 13th December, 1946", "(b) 22nd January, 1947", "(c) 3rd June 1947", "(d) 29th August, 1947"], 3, "The Drafting Committee was appointed on 29th August 1947 to prepare a draft of the new Constitution."],
+  [2, "U.P.P.C.S. (Pre) 1991", "5. Who was the chairman of the National Flag Committee?", ["(a) C. Rajagopalachari", "(b) Dr. Rajendra Prasad", "(c) J.B. Kripalani", "(d) Dr. B.R. Ambedkar"], 1, "Dr. Rajendra Prasad was the chairman of the Ad-hoc Committee on the National Flag appointed by the Constituent Assembly."],
+
+  // ================= 4. Sources of the Constitution (11 Qs) =================
+  [3, "U.P.P.C.S. (Pre) 2021", "1. Which one of the following is NOT correctly matched? (Provisions - Sources)", ["(a) Fundamental Rights - USA", "(b) Directive Principles of State Policy - Ireland", "(c) Residual Powers of Center - Australia", "(d) Emergency Powers - Germany"], 2, "Vesting of residuary powers in the Centre was borrowed from the Canadian Constitution, not Australia."],
+  [3, "U.P.P.C.S. (Mains) 2006, 2017", "2. The feature of Federal system of the Indian Constitution is inspired by the constitution of:", ["(a) Canada", "(b) United Kingdom", "(c) U.S.A.", "(d) Ireland"], 0, "India's federation with a strong Centre is modeled on the Canadian federal system."],
+  [3, "U.P.P.C.S. (Pre) 2017", "3. The concept of \"A Union of States in the Indian Constitution\" has been derived from:", ["(a) The American Declaration of Independence", "(b) The Australian Constitution", "(c) The British North-American Act", "(d) The Swiss Constitution"], 2, "The phrase 'Union of States' (Article 1) is derived from the British North America Act, 1867 (Constitution of Canada)."],
+  [3, "U.P. Lower Sub. (Pre) 2015; U.P.P.C.S. (Mains) 2011, 2012, 2014, 2016", "4. The makers of the Indian Constitution adopted the concept of the Concurrent List described in the Seventh Schedule from-", ["(a) the Constitution of Canada", "(b) the Constitution of Australia", "(c) the Constitution of Italy", "(d) the Constitution of South Africa"], 1, "The Concurrent List, freedom of trade and commerce, and joint sitting of Parliament were borrowed from the Australian Constitution."],
+  [3, "U.P.P.C.S. (Pre) 2015", "5. The idea of the Preamble has been borrowed in Indian Constitution from the Constitution of -", ["(a) Italy", "(b) Canada", "(c) France", "(d) U.S.A."], 3, "The idea of having a Preamble at the beginning of the Constitution was inspired by the Constitution of the United States of America."],
+  [3, "U.P.P.C.S. (Pre) 2015", "6. Assertion (A): The Constitution of India has become the longest one.\nReason (R): The chapter on Fundamental Rights has been borrowed from the model of American Constitution.\nChoose the correct answer using the code given below.", ["(a) Both (A) and (R) are true, and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true, but (R) is not the correct explanation of (A).", "(c) (A) is true, but (R) is false.", "(d) (A) is false, but (R) is true."], 1, "Both statements are true, but the length of the Indian Constitution is primarily due to detailed administrative provisions, inclusion of both Union and State constitutions, and special provisions—not merely borrowing Fundamental Rights from the USA."],
+  [3, "U.P.P.S.C. (GIC) 2010", "7. Match List-1 with List-II by using code given below-\nList-I (Constitutional Provisions):\nA. Rule of Law\nB. Procedure established by Law\nC. Reserving of bill by Governor for President's consideration\nD. Concurrent List\nList-II (Sources):\n1. Australia\n2. England\n3. Japan\n4. Canada", ["(a) A-1, B-2, C-3, D-4", "(b) A-2, B-1, C-4, D-3", "(c) A-3, B-2, C-1, D-4", "(d) A-2, B-3, C-4, D-1"], 3, "Rule of Law: England (2); Procedure established by Law: Japan (3); Reserving of bill by Governor: Canada (4); Concurrent List: Australia (1)."],
+  [3, "U.P.P.C.S. (Pre) 1998; U.P. Lower Sub. (Spl.) (Pre) 2004", "8. The concept of 'the Directive Principles of State Policy' in the Indian Constitution has been adopted from the Constitution of -", ["(a) France", "(b) Ireland", "(c) Japan", "(d) U.S.S.R."], 1, "Directive Principles of State Policy (Part IV) were borrowed from the Irish Constitution of 1937 (which itself had copied them from the Spanish Constitution)."],
+  [3, "U.P.U.D.A./L.D.A. (Pre) 2004", "9. The concept of Fundamental Duties has been taken from-", ["(a) American Constitution", "(b) British Constitution", "(c) Russian (Former Soviet Union) Constitution", "(d) French Constitution"], 2, "Fundamental Duties (Article 51A, added by the 42nd Amendment Act, 1976) were inspired by the Constitution of the former USSR."],
+  [3, "U.P.P.C.S. (Pre) 1998", "10. The concept of 'Judicial Review' in India has been adopted from the Constitution of -", ["(a) U.K.", "(b) U.S.A.", "(c) U.S.S.R.", "(d) Australia"], 1, "Judicial Review and the independence of the judiciary were adopted from the Constitution of the U.S.A."],
+  [3, "U.P.P.C.S. (Pre) 1998", "11. In giving representation to talent, experience, and service in the composition of the Council of States, the Constitution makers of India were influenced by the example of -", ["(a) Irish Republic", "(b) Canada", "(c) U.S.A.", "(d) Australia"], 0, "The nomination of 12 members to the Rajya Sabha (Council of States) by the President from literature, science, art, and social service was inspired by the Irish Republic."],
+
+  // ================= 5. Parts of the Indian Constitution (15 Qs) =================
+  [4, "U.P.P.C.S. (Pre) 2025", "1. Which of the following pairs of Part of Indian Constitution and its subject is/are NOT correctly matched?\n1. Part IV A - Fundamental Duties\n2. Part VI - The States\n3. Part XI - The Municipalities\nSelect the correct answer from the code given below:", ["(a) 1 and 2", "(b) Only 3", "(c) 2 and 3", "(d) Only 1"], 1, "Pair 3 is incorrect: Municipalities are covered under Part IX-A, whereas Part XI deals with Relations between the Union and the States."],
+  [4, "U.P.P.C.S. (Pre.) 2023", "2. Which among the following (Provision - Part of the Constitution) is not correctly matched?", ["(a) Official Language - Part XVII", "(b) The Union Territories - Part VIII", "(c) The Scheduled and Tribal Areas - Part X", "(d) Tribunals - Part XI"], 3, "Tribunals are dealt with in Part XIV-A (Articles 323A and 323B), not Part XI."],
+  [4, "U.P.R.O./A.R.O. (Pre) (Re-Exam) 2023", "3. In which part of the Indian Constitution, have the provisions for elections been made?", ["(a) Part XVII (17)", "(b) Part XV (15)", "(c) Part XVI (16)", "(d) Part XIV (14)"], 1, "Part XV (Articles 324 to 329A) of the Indian Constitution contains provisions relating to Elections and the Election Commission."],
+  [4, "U.P.P.C.S. (Pre) 2022", "4. Consider the following subjects and arrange them into sequential order as mentioned in the Constitution.\nI. The union and its territory\nII. Fundamental Duties\nIII. Citizenship\nIV. Directive Principles of State Policy\nSelect the correct answer from the code given below.", ["(a) I, III, IV, II", "(b) IV, II, III, I", "(c) II, IV, I, III", "(d) III, I, II, IV"], 0, "Sequential order in the Constitution: Part I: Union and its Territory (I) -> Part II: Citizenship (III) -> Part IV: DPSP (IV) -> Part IV-A: Fundamental Duties (II)."],
+  [4, "U.P.P.C.S. (Pre) 2020", "5. Which one of the following is NOT correctly matched?", ["(a) Fundamental Duties - Part IV A", "(b) The States - Part VI", "(c) Attorney General of India - Part XIII", "(d) Services under the Union and States - Part XIV"], 2, "The Attorney General of India (Article 76) falls under Part V (The Union), whereas Part XIII deals with Trade, Commerce and Intercourse within the Territory of India."],
+  [4, "U.P. R.O./A.R.O. (Pre) (Re-Exam) 2016", "6. Which one among the following is NOT correctly matched? (Provision - Part of the Constitution)", ["(a) Citizenship - Part II", "(b) The Union Territories - Part VII", "(c) The Municipalities - Part IX A", "(d) Elections - Part XV"], 1, "Union Territories are dealt with in Part VIII. Part VII (dealing with Part B states) was repealed by the 7th Amendment Act, 1956."],
+  [4, "U.P.R.O./A.R.O. (Pre) 2016; U.P. R.O./A.R.O. (Pre) (Re-Exam) 2016", "7. Which of the following pair is not correctly matched under the Constitution of India?", ["(a) The Panchayats - Part IX", "(b) The Municipalities - Part IX-A", "(c) The Co-operative Societies - Part IX-B", "(d) Tribunals - Part X"], 3, "Tribunals belong to Part XIV-A, whereas Part X deals with The Scheduled and Tribal Areas."],
+  [4, "U.P. P.C.S. (Pre) 2013", "8. Which part of our Constitution envisages a three tier system of Panchayats?", ["(a) Part IX", "(b) Part X", "(c) Part XI", "(d) Part XII"], 0, "Part IX (added by the 73rd Constitutional Amendment Act, 1992) provides for a three-tier system of Panchayati Raj at village, intermediate, and district levels."],
+  [4, "U.P.P.C.S. (Mains) 2013", "9. Match List - I with List - II and select the correct answer from the code given below:\nList I:\nA. Fundamental Rights\nB. Fundamental Duties\nC. The Union\nD. Emergency Provisions\nList - II:\n1. Part IV A, Constitution of India\n2. Part III, Constitution of India\n3. Part XVIII, Constitution of India\n4. Part V, Constitution of India", ["(a) A-2, B-1, C-4, D-3", "(b) A-3, B-4, C-1, D-2", "(c) A-2, B-1, C-3, D-4", "(d) A-4, B-3, C-2, D-1"], 0, "Fundamental Rights: Part III (2); Fundamental Duties: Part IV-A (1); The Union: Part V (4); Emergency Provisions: Part XVIII (3)."],
+  [4, "U.P.R.O./A.R.O. (Mains) 2013", "10. Match List-I with List-II and select the correct answer from the code given below the lists:\nList-I:\nA. Part XV of the Constitution\nB. Part XVI of the Constitution\nC. Part XVII of the Constitution\nD. Part XVIII of the Constitution\nList-II:\n1. Emergency Provisions\n2. Official Language\n3. Special Provisions regarding certain classes\n4. Elections", ["(a) A-3, B-4, C-1, D-2", "(b) A-4, B-3, C-2, D-1", "(c) A-1, B-2, C-3, D-4", "(d) A-2, B-1, C-4, D-3"], 1, "Part XV: Elections (4); Part XVI: Special Provisions relating to certain classes (3); Part XVII: Official Language (2); Part XVIII: Emergency Provisions (1)."],
+  [4, "U.P. P.C.S. (Mains) 2012; U.P. P.C.S. (Spl) (Mains) 2008", "11. The Indian Constitution is divided into", ["(a) 16 Parts", "(b) 22 Parts", "(c) 24 Parts", "(d) 25 Parts"], 1, "Originally and numerically by last numbered Part, the Indian Constitution is divided into 22 Parts (though with sub-parts like IV-A, IX-A, IX-B, XIV-A it totals 25 parts)."],
+  [4, "U.P. P.C.S. (Mains) 2012", "12. Which part and chapter of the Indian Constitution deal with the legislative relation between the Union and the States?", ["(a) Part XI and Chapter I", "(b) Part XI and Chapter II", "(c) Part XII and Chapter I", "(d) Part XII and Chapter II"], 0, "Part XI, Chapter I (Articles 245 to 255) deals with Legislative Relations between the Union and the States (Chapter II covers Administrative Relations)."],
+  [4, "U.P.P.C.S. (Mains) 2009", "13. Match List-I with List-II and select the correct answer by using the code given below the lists:\nList-I:\nA. Part IX of the Indian Constitution\nB. Part VIII of the Indian Constitution\nC. Part IV A of the Indian Constitution\nD. Part IX A of the Indian Constitution\nList-II:\n1. Union Territories\n2. Municipalities\n3. Panchayats\n4. Fundamental Duties", ["(a) A-3, B-1, C-4, D-2", "(b) A-1, B-2, C-3, D-4", "(c) A-2, B-4, C-1, D-3", "(d) A-4, B-3, C-2, D-1"], 0, "Part IX: Panchayats (3); Part VIII: Union Territories (1); Part IV-A: Fundamental Duties (4); Part IX-A: Municipalities (2)."],
+  [4, "U.P.P.C.S. (Mains) 2007", "14. Which one of the following pair is correctly matched?", ["(a) Part-II of the Constitution: Fundamental Rights", "(b) Part-III of the Constitution: Citizenship", "(c) Part-IV(A) of the Constitution: Fundamental Duties", "(d) Part-V of the Constitution: Directive Principles of State Policy"], 2, "Part IV-A corresponds to Fundamental Duties (Article 51A). Citizenship is Part II, Fundamental Rights is Part III, and DPSP is Part IV."],
+  [4, "U.P. Lower Sub. (Pre) 2004", "15. Which one of the following is not matched correctly?", ["(a) Citizenship - Part II of Constitution", "(b) Fundamental Rights - Part III of Constitution", "(c) Fundamental Duties - Part VI-A of Constitution", "(d) State - Part VI of Constitution"], 2, "Fundamental Duties are placed in Part IV-A of the Constitution, not Part VI-A."],
+
+  // ================= 6. Articles of the Constitution (20 Qs) =================
+  [5, "U.P.P.C.S. (Pre) 2024", "1. Match List-I and List-II and choose the correct answer from the codes given below the lists:\nList-I:\nA. Consolidated Fund of India\nB. Finance Commission\nC. Financial Emergency\nD. Comptroller and Auditor General of India\nList-II:\n1. Article 266\n2. Article 360\n3. Article 280\n4. Article 148", ["(a) A-3, B-1, C-2, D-4", "(b) A-4, B-1, C-3, D-2", "(c) A-1, B-3, C-2, D-4", "(d) A-1, B-2, C-3, D-4"], 2, "Consolidated Fund of India: Art. 266 (1); Finance Commission: Art. 280 (3); Financial Emergency: Art. 360 (2); CAG: Art. 148 (4)."],
+  [5, "U.P.P.C.S. (Pre) 2024", "2. Which one of the following is correctly matched? Constitutional Body / Constitutional Article (Official Key marked *)", ["(a) Election Commission - 165", "(b) National Commission for Scheduled Castes - 148", "(c) Finance Commission - 263", "(d) National Commission for Backward Classes - 340"], -1, "Note: Marked (*) in official PDF Answer Key because none of the pairs are strictly exact (EC is Art. 324, NCSC is Art. 338, Finance Commission is Art. 280, NCBC is Art. 338B while Art. 340 deals with appointment of a Commission to investigate backward classes)."],
+  [5, "UP R.O./A.R.O. (Pre) 2023", "3. Match List-I with List-II and choose the correct answer using the code given below:\nList-I:\nA. Article-26\nB. Article-40\nC. Article-98\nD. Article-239\nList-II:\n1. Administration of Union Territories\n2. Secretariat of Parliament\n3. Freedom to manage religious affairs\n4. Organisation of Village Panchayats", ["(a) A-3, B-4, C-2, D-1", "(b) A-4, B-3, C-2, D-1", "(c) A-3, B-4, C-1, D-2", "(d) A-3, B-1, C-2, D-4"], 0, "Art. 26: Freedom to manage religious affairs (3); Art. 40: Village Panchayats (4); Art. 98: Secretariat of Parliament (2); Art. 239: Administration of UTs (1)."],
+  [5, "U.P.P.C.S. (Pre.) 2023", "4. Match list-I with list-II and select the correct answer using the code given below the lists:\nList-I:\n(A) Article - 324\n(B) Article - 315\n(C) Article - 280\n(D) Article - 338\nList-II:\n(1) National Commission for Schedule Castes\n(2) Finance Commission\n(3) Public Service Commission\n(4) Election Commission", ["(a) A-4, B-3, C-2, D-1", "(b) A-3, B-2, C-1, D-4", "(c) A-1, B-3, C-4, D-2", "(d) A-3, B-2, C-4, D-1"], 0, "Art. 324: Election Commission (4); Art. 315: Public Service Commissions (3); Art. 280: Finance Commission (2); Art. 338: National Commission for SCs (1)."],
+  [5, "U.P.P.C.S. (Pre) 2020", "5. Match List-I with List-II and select the correct answer from the codes given below the lists.\nList-I (Article):\nA. Article 61\nB. Article 67(b)\nC. Article 94\nD. Article 90\nList-II (Provision):\n1. Removal of Deputy Chairman of Rajya Sabha\n2. Impeachment of President\n3. Removal of Vice-President\n4. Removal of Speaker", ["(a) A-2, B-4, C-3, D-1", "(b) A-3, B-2, C-4, D-1", "(c) A-2, B-3, C-4, D-1", "(d) A-4, B-1, C-3, D-2"], 2, "Art. 61: Impeachment of President (2); Art. 67(b): Removal of Vice-President (3); Art. 94: Removal of Speaker (4); Art. 90: Removal of Deputy Chairman of Rajya Sabha (1)."],
+  [5, "U.P.P.C.S. (Pre) 2020", "6. Which one of the following pairs is NOT correctly matched? (Official Key marked *)", ["(a) Interstate Council - Article 263", "(b) Finance Commission - Article 280", "(c) Administrative Tribunal - Article 323A", "(d) Union Public Service Commission - Article 315"], -1, "Note: Marked (*) in official PDF Answer Key because all four pairs are actually correctly matched in the Constitution."],
+  [5, "U.P. P.C.S. (Mains) 2016", "7. Match List-I with List-II and select your correct answer using the code given below the lists:\nList I:\n(A) To admit new state by law\n(B) The right to equality\n(C) Protection against arrest and detention\n(D) The power of the President to assent the Bill\nList - II:\n1. Article 14\n2. Article 2\n3. Article 111\n4. Article 22", ["(a) A-1, B-2, C-3, D-4", "(b) A-2, B-1, C-4, D-3", "(c) A-3, B-4, C-2, D-1", "(d) A-4, B-3, C-1, D-2"], 1, "Admit new state: Art. 2 (2); Right to equality: Art. 14 (1); Protection against arrest: Art. 22 (4); President's assent to Bills: Art. 111 (3)."],
+  [5, "U.P.P.C.S. (Pre) 2016", "8. Match List-I and List-II and select the correct answer using the code given below the lists:\nList I:\n(A) Constitutional Amendments\n(B) Finance Commission\n(C) Financial Emergency\n(D) All India Services\nList II:\n1. Article 360\n2. Article 312\n3. Article 280\n4. Article 368", ["(a) A-2, B-3, C-4, D-1", "(b) A-4, B-3, C-1, D-2", "(c) A-3, B-4, C-1, D-2", "(d) A-1, B-2, C-3, D-4"], 1, "Constitutional Amendments: Art. 368 (4); Finance Commission: Art. 280 (3); Financial Emergency: Art. 360 (1); All India Services: Art. 312 (2)."],
+  [5, "U.P. P.C.S. (Pre) 2016", "9. Match List-I with List-II and select the correct answer using the code given below the lists:\nList I (Institution):\n(A) Comptroller and Auditor General of India\n(B) Finance Commission\n(C) Administrative Tribunal\n(D) Union Public Service Commission\nList - II (Articles):\n1. Article 315\n2. Article 280\n3. Article 148\n4. Article 323 (A)", ["(a) A-3, B-2, C-4, D-1", "(b) A-3, B-4, C-2, D-1", "(c) A-1, B-2, C-4, D-3", "(d) A-4, B-1, C-3, D-2"], 0, "CAG: Art. 148 (3); Finance Commission: Art. 280 (2); Administrative Tribunal: Art. 323A (4); UPSC: Art. 315 (1)."],
+  [5, "U.P. R.O./A.R.O. (Mains) 2016", "10. Under which Article of the Indian Constitution there is provision for the High Courts for Union Territories?", ["(a) Article 240", "(b) Article 241", "(c) Article 242", "(d) Article 239"], 1, "Article 241 empowers Parliament by law to constitute a High Court for a Union Territory or declare any court in any such territory to be a High Court."],
+  [5, "U.P. Lower Sub. (Mains) 2015", "11. Match List-I with List-II and select the correct answer from the code given below:\nList I:\n(A) Formation of new states\n(B) Citizenship\n(C) Fundamental Rights\n(D) Setting of Administrative Tribunals\nList - II:\n1. Part-2 of the Constitution of India\n2. Art. 3 of the Constitution of India\n3. Art. 323-A of the Constitution of India\n4. Part-3 of the Constitution of India", ["(a) A-2, B-1, C-4, D-3", "(b) A-1, B-2, C-3, D-4", "(c) A-3, B-4, C-1, D-2", "(d) A-4, B-2, C-2, D-3"], 0, "Formation of new states: Art. 3 (2); Citizenship: Part 2 (1); Fundamental Rights: Part 3 (4); Administrative Tribunals: Art. 323-A (3)."],
+  [5, "U.P. Lower Sub. (Pre) 2015", "12. Match List-I with List-II and select the correct answer using the code given below the Lists:\nList - I:\nA. Article 323-A\nB. Article 324\nC. Article 330\nD. Article 320\nList - II:\n1. Election\n2. Administrative Tribunals\n3. Functions of Public Service Commissions\n4. Reservation of seats for SC and ST in Lok Sabha", ["(a) A-1, B-2, C-3, D-4", "(b) A-4, B-3, C-2, D-1", "(c) A-2, B-1, C-4, D-3", "(d) A-3, B-4, C-1, D-2"], 2, "Art. 323-A: Administrative Tribunals (2); Art. 324: Election (1); Art. 330: Reservation for SC/ST in Lok Sabha (4); Art. 320: Functions of PSCs (3)."],
+  [5, "U.P.P.C.S. (Mains) 2015", "13. Match List-I with List-II and select the correct answer from the code given below the lists:\nList - I:\nA. Article 76\nB. Article 148\nC. Article 75(1)\nD. Article 131\nList - II:\n1. Comptroller and Auditor General of India\n2. Jurisdiction of Supreme Court\n3. Attorney General of India\n4. Appointment of Union Ministers", ["(a) A-1, B-2, C-3, D-4", "(b) A-3, B-1, C-4, D-2", "(c) A-4, B-1, C-2, D-3", "(d) A-2, B-3, C-4, D-1"], 1, "Art. 76: Attorney General of India (3); Art. 148: CAG (1); Art. 75(1): Appointment of Union Ministers (4); Art. 131: Original Jurisdiction of Supreme Court (2)."],
+  [5, "U.P.P.C.S. (Pre) 2015", "14. Match List-I with List-II and select the correct answer from the code given below the lists:\nList I (Provision under the Constitution):\nA. Equality before Law\nB. Right to Work\nC. Just and Humane conditions of work\nD. Free and Compulsory Education for Children\nList - II (Article number):\n1. Article 42\n2. Article 45\n3. Article 14\n4. Article 41\n(Official Key marked *)", ["(a) A-1, B-2, C-3, D-4", "(b) A-3, B-4, C-1, D-2", "(c) A-2, B-1, C-4, D-3", "(d) A-4, B-3, C-1, D-2"], -1, "Note: Marked (*) in official PDF Answer Key due to post-86th Amendment wording of Art. 45 (early childhood care below 6 years vs Art. 21A), though option (b) A-3, B-4, C-1, D-2 is the intended pairing."],
+  [5, "U.P. P.C.S. (Mains) 2012; U.P.P.S.C. (R.I.) 2014", "15. Which one of the following articles of the Indian Constitution provides for All-Indian Services?", ["(a) Article 310", "(b) Article 311", "(c) Article 312", "(d) Article 313"], 2, "Article 312 empowers Parliament to create new All-India Services common to the Union and the States if Rajya Sabha passes a resolution supported by two-thirds of members present and voting."],
+  [5, "U.P.P.C.S. (Pre) 2013", "16. Which one of the following is not correctly matched?", ["(a) Article 39A - Equal Justice and Free Legal Aid", "(b) Article 40 - Organisation of Village Panchayats", "(c) Article 44 - Uniform Civil Code", "(d) Article 48 - Separation of Judiciary from Executive"], 3, "Separation of Judiciary from Executive is provided under Article 50, whereas Article 48 deals with Organisation of Agriculture and Animal Husbandry."],
+  [5, "U.P. Lower Sub. (Pre) 2002; U.P.P.C.S. (Mains) 2005, 2011", "17. Match List-I with List-II and select the correct answer using the code given below the lists:\nList-I (Article of the Constitution):\nA. Article 54\nB. Article 75\nC. Article 155\nD. Article 164\nList-II (Content):\n1. Election of the President of India\n2. Appointment of the Prime Minister and cabinet\n3. Appointment of the Governor of State\n4. Appointment of the Chief Minister and Council of Ministers of a State\n5. Composition of Legislative Assemblies", ["(a) A-1, B-2, C-3, D-4", "(b) A-1, B-2, C-4, D-5", "(c) A-2, B-1, C-3, D-5", "(d) A-2, B-1, C-4, D-3"], 0, "Art. 54: Election of President (1); Art. 75: Appointment of PM and Council of Ministers (2); Art. 155: Appointment of Governor (3); Art. 164: Appointment of CM and State Ministers (4)."],
+  [5, "U.P.U.D.A./L.D.A. (Spl) (Mains) 2010", "18. Special provision regarding Financial Bills is given under-", ["(a) Article 117", "(b) Article 119", "(c) Article 121", "(d) Article 123"], 0, "Article 117 of the Constitution lays down special provisions as to Financial Bills (Category I and Category II)."],
+  [5, "U.P.P.C.S (Pre) 2010", "19. Match List-I with List-II and select the correct answer using the code given below the list:\nList-I:\nA. Article 14\nB. Article 36\nC. Article 74\nD. Article 368\nList-II:\n1. Amendment procedure\n2. Council of Ministers\n3. Right to Equality\n4. Directive Principles", ["(a) A-2, B-1, C-4, D-3", "(b) A-4, B-1, C-3, D-2", "(c) A-1, B-2, C-3, D-4", "(d) A-3, B-4, C-2, D-1"], 3, "Art. 14: Right to Equality (3); Art. 36: Definition of State in DPSP (4); Art. 74: Council of Ministers to aid and advise President (2); Art. 368: Amendment procedure (1)."],
+  [5, "U.P. Lower Sub. (Spl) (Pre) 2002; U.P. Lower Sub. (Pre) 2002", "20. Which one of the following is matched correctly-", ["(a) Article 17 - Equality before Law", "(b) Article 78 - Composition of Parliament", "(c) Article 192 - Salaries and Allowances of Parliament Members", "(d) Article 352 - Proclamation of Emergency"], 3, "Article 352 deals with Proclamation of National Emergency. (Art. 17 is Abolition of Untouchability; Art. 78 is Duties of PM; Art. 192 is Decision on disqualifications of State Legislature members)."],
+
+  // ================= 7. Schedules of the Constitution (24 Qs) =================
+  [6, "U.P.R.O./A.R.O. (Pre) 2016; U.P.P.C.S. (Pre) 2025", "1. Match List-I with List-II and select the correct answer from the code given below the lists:\nList-I:\nA. 7th Schedule\nB. 8th Schedule\nC. 9th Schedule\nD. 10th Schedule\nList-II:\n1. Languages\n2. Disqualification on ground of defection\n3. Distribution of legislative powers\n4. Validation of certain Acts", ["(a) A-3, B-1, C-2, D-4", "(b) A-2, B-3, C-4, D-1", "(c) A-3, B-1, C-4, D-2", "(d) A-4, B-2, C-1, D-3"], 2, "7th Schedule: Distribution of legislative powers (3); 8th Schedule: Languages (1); 9th Schedule: Validation of certain Acts/Regulations (4); 10th Schedule: Anti-defection (2)."],
+  [6, "U.P.P.C.S. (Pre) 2024", "2. The Concurrent list of the Indian Constitution includes:\n1. Trade and Commerce\n2. Adulteration of Goods\n3. Succession\nSelect the correct answer from the codes given below:", ["(a) 1 and 3", "(b) 1, 2 and 3", "(c) Only 1", "(d) 2 and 3"], 3, "Adulteration of foodstuffs and other goods (Entry 18) and Wills, intestacy and succession (Entry 5) are in the Concurrent List, whereas Trade and Commerce within the State is in the State List."],
+  [6, "U.P.P.C.S. (Pre.) 2023", "3. Which one of the following pairs (Schedule - Subjects) is not correctly matched?", ["(a) Third Schedule - Forms of Oaths or Affirmations", "(b) Tenth Schedule - Provisions as to disqualification on ground of defection", "(c) Eighth Schedule - Languages", "(d) Ninth Schedule - Allocation of seats in the Council of States"], 3, "Allocation of seats in the Council of States (Rajya Sabha) is covered in the Fourth Schedule, whereas the Ninth Schedule deals with validation of certain Acts and Regulations."],
+  [6, "U.P. P.C.S. (Mains) 2016; U.P. R.O./A.R.O. (Pre) 2023", "4. The Sixth Schedule of the Indian Constitution relates to the administration of tribal areas in which of the following states?", ["(a) Assam, Arunachal Pradesh, Tripura and Mizoram", "(b) Assam, Tripura, Nagaland and Mizoram", "(c) Assam, Nagaland, Meghalaya and Mizoram", "(d) Assam, Meghalaya, Tripura and Mizoram"], 3, "The Sixth Schedule provides for the administration of tribal areas in the four north-eastern states of Assam, Meghalaya, Tripura, and Mizoram (AMTM)."],
+  [6, "U.P.P.C.S. (Pre) 2022", "5. Match List - I with List - II and select the correct answer from the code given below the lists.\nList - I (Schedule):\nA. Third Schedule\nB. Fourth Schedule\nC. Seventh Schedule\nD. Eighth Schedule\nList - II (Subject):\n1. Allocation of seats in the Council of States\n2. Forms of Oath or Affirmations\n3. Languages\n4. List of subject matter of laws to be made by the Parliament and by State Legislatures", ["(a) A-3, B-4, C-2, D-1", "(b) A-1, B-2, C-3, D-4", "(c) A-4, B-3, C-1, D-2", "(d) A-2, B-1, C-4, D-3"], 3, "Third Schedule: Oaths/Affirmations (2); Fourth Schedule: Rajya Sabha seats (1); Seventh Schedule: Legislative lists (4); Eighth Schedule: Languages (3)."],
+  [6, "U.P.R.O./A.R.O. (Mains) 2021", "6. In which of the following Schedules of the Constitution of India is provision made for the three legislative lists?", ["(a) VI", "(b) VII", "(c) VIII", "(d) None of the above"], 1, "The Seventh Schedule (under Article 246) divides legislative powers into three lists: List I (Union List), List II (State List), and List III (Concurrent List)."],
+  [6, "U.P.P.C.S. (Pre) 2019", "7. Which of the following is not correctly matched?", ["(a) Public Health and Sanitation - State List", "(b) Census - Union List", "(c) Allocation of seats in the council of States - Second Schedule", "(d) Anti-Defection - Tenth Schedule"], 2, "Allocation of seats in the Council of States is in the Fourth Schedule; the Second Schedule deals with emoluments, allowances, and privileges."],
+  [6, "U.P.P.C.S. (Pre) 2017", "8. Which of the following are enshrined in the third schedule of the Indian Constitution?\n1. Form of oath of office for a Minister for the Union.\n2. Form of oath to be made by the Chief Justice of Supreme Court.\n3. Form of oath of office for the President of India.\n4. Form of oath to be made by a Member of Parliament.\nSelect the correct answer using the code given below:", ["(a) 1, 2, 3", "(b) 2, 3, 4", "(c) 1, 2, 4", "(d) 1, 2, 3, 4"], 2, "The oath of the President of India is prescribed separately in Article 60 (not the Third Schedule). Union Ministers, Supreme Court Judges, and MPs take oaths under the Third Schedule."],
+  [6, "U.P. Lower Sub. (Pre) 2008; U.P.P.C.S. (Mains) 2017", "9. Education which was initially a state subject was transferred to the Concurrent List by the", ["(a) 24th Amendment", "(b) 25th Amendment", "(c) 42nd Amendment", "(d) 44th Amendment"], 2, "The 42nd Amendment Act of 1976 transferred five subjects from the State List to the Concurrent List: Education, Forests, Weights & Measures, Protection of Wild Animals & Birds, and Administration of Justice."],
+  [6, "U.P. P.C.S. (Mains) 2017", "10. Coelho case is related to which Schedule of the Constitution of India?", ["(a) Seventh", "(b) Eighth", "(c) Ninth", "(d) Tenth"], 2, "In I.R. Coelho v. State of Tamil Nadu (2007), the Supreme Court ruled that laws placed in the Ninth Schedule after April 24, 1973 are open to judicial review if they violate the Basic Structure."],
+  [6, "U.P.P.S.C. (R.I.) 2014; U.P.P.C.S. (Pre) 2015", "11. The Eleventh Schedule of the Constitution is related to which of the following?", ["(a) Municipality", "(b) Panchayati Raj", "(c) Centre-State relationship", "(d) Removal of corruption"], 1, "Added by the 73rd Amendment Act, 1992, the Eleventh Schedule lists 29 functional items placed within the purview of Panchayats."],
+  [6, "U.P.P.C.S. (Mains) 2014", "12. Which one of the following Schedules of the Indian Constitution lists the names of states and specifies their territories?", ["(a) First", "(b) Second", "(c) Third", "(d) Fourth"], 0, "The First Schedule contains the names of the States and their territorial jurisdictions as well as the names and extents of the Union Territories."],
+  [6, "U.P. Lower Sub. (Mains) 2013", "13. In which Schedule of the Indian Constitution Antidefection Law is placed?", ["(a) Sixth Schedule", "(b) Ninth Schedule", "(c) Tenth Schedule", "(d) None of the above"], 2, "The Tenth Schedule, inserted by the 52nd Amendment Act of 1985, lays down provisions regarding disqualification on the ground of defection."],
+  [6, "U.P.P.C.S. (Mains) 2006; 2011", "14. Which one of the following subject is in List-III Concurrent List of the Seventh Schedule of the Constitution of India?", ["(a) Criminal Procedure", "(b) Police", "(c) Prisons", "(d) Public Order"], 0, "Criminal Procedure (Entry 2) is in the Concurrent List, whereas Police, Prisons, and Public Order are in the State List."],
+  [6, "U.P.P.C.S. (Pre) 2009, 2010", "15. Which one of the given Subjects is not correctly matched with their List (Subject - List)", ["(a) Forest - Concurrent", "(b) Stock Exchange - Concurrent", "(c) Post Office Saving Bank - Union", "(d) Public Health - State"], 1, "Stock Exchanges and futures markets (Entry 48) belong to the Union List, not the Concurrent List."],
+  [6, "U.P. Lower Sub. (Spl) (Pre) 2010", "16. 'Marriage,' 'Divorce' and 'Adoption' are included in the Seventh Schedule of the Constitution under the following-", ["(a) List I - Union List", "(b) List II - State List", "(c) List III - Concurrent List", "(d) None of these three lists"], 2, "Marriage and divorce, infants and minors, and adoption are listed under Entry 5 of List III (Concurrent List)."],
+  [6, "U.P.U.D.A/L.D.A. (Pre) 2006", "17. Economic planning is included in which list of Constitution-", ["(a) Union List", "(b) State List", "(c) Concurrent List", "(d) Special List"], 2, "Economic and social planning (Entry 20) is placed in the Concurrent List of the Seventh Schedule."],
+  [6, "U.P.P.C.S. (Mains) 2005", "18. Which of the following is the subject of Concurrent List?", ["(a) Police", "(b) Criminal Matters", "(c) Radio and Television", "(d) Foreign Affairs"], 1, "Criminal law and criminal procedure are in the Concurrent List; Police is in the State List; Radio/TV and Foreign Affairs are in the Union List."],
+  [6, "U. P. P. C. S. (Mains) 2004", "19. Match the following-\nList-I:\nA. Union List\nB. State List\nC. Concurrent List\nD. Residuary Subject\nList II:\n1. Police and Public Order\n2. Space Research\n3. Census\n4. Population Control and Family Planning", ["(a) A-3, B-1, C-4, D-2", "(b) A-2, B-3, C-1, D-4", "(c) A-1, B-2, C-3, D-4", "(d) A-4, B-1, C-2, D-3"], 0, "Union List: Census (3); State List: Police and Public Order (1); Concurrent List: Population Control & Family Planning (4); Residuary Subject: Space Research (2)."],
+  [6, "U.P.P.C.S. (Mains) 2003", "20. To give constitutional protection, state land reforms laws have been included in the -", ["(a) 7th Schedule", "(b) 9th Schedule", "(c) 8th Schedule", "(d) 10th Schedule"], 1, "The Ninth Schedule was added by the First Constitutional Amendment Act, 1951 to protect agrarian and land reform laws from judicial challenge."],
+  [6, "U.P.P.C.S. (Pre) 2001", "21. Which one of the following is in the State list?", ["(a) Railway Police", "(b) Corporation Tax", "(c) Census", "(d) Economic and Social Planning"], 0, "Railway Police (Entry 2 of List II) is a State List subject; Corporation Tax and Census are Union List; Economic & Social Planning is Concurrent List."],
+  [6, "U.P.P.C.S. (Pre) 1999", "22. Match List-I with List-II and select the correct answer from the code given below:\nList-I (Schedules of the Constitution):\nA. 4th\nB. 6th\nC. 8th\nD. 9th\nList-II (Subject):\n1. Land Reforms\n2. Language\n3. Council of States\n4. Tribal Areas", ["(a) A-1, B-2, C-3, D-4", "(b) A-2, B-3, C-4, D-1", "(c) A-3, B-4, C-2, D-1", "(d) A-4, B-2, C-1, D-3"], 2, "4th Schedule: Council of States (3); 6th Schedule: Tribal Areas (4); 8th Schedule: Languages (2); 9th Schedule: Land Reforms (1)."],
+  [6, "U.P.P.C.S. (Pre) 1997", "23. Which one of the following is not mentioned in the Union List under the Seventh Schedule of the Indian Constitution-", ["(a) Banking", "(b) Insurance", "(c) Census", "(d) Gas"], 3, "Gas and gas-works (Entry 25) is in the State List, whereas Banking, Insurance, and Census are in the Union List."],
+  [6, "U.P.P.C.S. (Pre) 1997", "24. Which one of the following is included in the State List under Seventh Schedule of Indian Constitution-", ["(a) Education", "(b) Electricity", "(c) Railway Police", "(d) Forest"], 2, "Railway Police is in the State List, while Education, Electricity, and Forests are in the Concurrent List."],
+
+  // ================= 8. The Preamble (19 Qs) =================
+  [7, "U.P.P.C.S. (Pre) 2025", "1. Which among the following words were inserted in the Preamble of the Indian Constitution by the 42nd Constitution Amendment?\n1. Socialist\n2. Secular\n3. Sovereign\n4. Republic\nSelect the correct answer from the code given below:", ["(a) 1 and 3", "(b) 3 and 4", "(c) 2 and 3", "(d) 1 and 2"], 3, "The 42nd Constitutional Amendment Act, 1976 inserted three new words into the Preamble: 'Socialist', 'Secular', and 'Integrity'."],
+  [7, "UP R.O./A.R.O. (Pre) 2023", "2. Which among the following is the correct order mentioned in Preamble of the Indian Constitution?", ["(a) Socialist, Secular, Sovereign, Democratic", "(b) Sovereign, Socialist, Secular, Democratic", "(c) Secular, Socialist, Sovereign, Democratic", "(d) Sovereign, Secular, Socialist, Democratic"], 1, "The exact sequence in the Preamble is: 'SOVEREIGN, SOCIALIST, SECULAR, DEMOCRATIC REPUBLIC'."],
+  [7, "U.P.P.C.S. (Pre) 2021", "3. Which of the following words is NOT mentioned in the Preamble of the Constitution of India?", ["(a) Sovereign", "(b) Democratic", "(c) Secular", "(d) Federal"], 3, "The word 'Federal' is nowhere used in the Preamble or anywhere else in the text of the Indian Constitution."],
+  [7, "U.P.P.C.S. (Pre) 2018", "4. How many types of justice, liberty, equality and fraternity in that order have been mentioned in the preamble of constitution of India?", ["(a) 3, 5, 2, 1", "(b) 1, 3, 5, 2", "(c) 2, 5, 3, 1", "(d) 5, 2, 1, 3"], 0, "The Preamble mentions 3 types of Justice (Social, Economic, Political), 5 types of Liberty (Thought, Expression, Belief, Faith, Worship), 2 types of Equality (Status, Opportunity), and 1 Fraternity."],
+  [7, "U.P. P.C.S. (Spl.) (Mains) 2008; U.P. P.C.S. (Mains) 2017", "5. The words 'Secular' and 'Socialist' were added to the Preamble of the Indian Constitution by the", ["(a) 39th Amendment", "(b) 41st Amendment", "(c) 42nd Amendment", "(d) 44th Amendment"], 2, "The 42nd Constitutional Amendment Act (1976) amended the Preamble to add 'Socialist' and 'Secular'."],
+  [7, "U.P.P.C.S. (Mains) 2017", "6. In which of the following cases Supreme Court held that 'The Preamble forms part of the Constitution'?", ["(a) Berubari", "(b) Sajjan Singh", "(c) Golaknath", "(d) Keshwanand Bharti case"], 0, "Note: Official PDF Answer Key lists (a) Berubari (though historically in Berubari Union 1960 SC said Preamble is NOT part of the Constitution, and reversed it in Kesavananda Bharati 1973; matched strictly to PDF Answer Key)."],
+  [7, "U.P.P.C.S. (Mains) 2016", "7. How many types of justice has been enshrined in the Preamble of the Constitution of India?", ["(a) Two", "(b) Three", "(c) One", "(d) Four"], 1, "Three distinct forms of justice are secured by the Preamble: Social, Economic, and Political justice."],
+  [7, "U.P. U.D.A./L.D.A. (Pre) 2006; U.P.P.C.S. (Mains) 2013, 2015", "8. Which part of the Indian Constitution has been described as the 'Soul' of the Constitution?", ["(a) Fundamental Rights", "(b) Directive Principles of State Policy", "(c) The Preamble", "(d) Right to Constitutional Remedies"], 2, "Pandit Thakur Das Bhargava described the Preamble as the 'soul of the Constitution', 'key to the Constitution', and 'a jewel set in the Constitution'."],
+  [7, "U.P.P.C.S. (R.I.) 2014", "9. In which of the following cases did the Supreme Court hold that \"the Preamble is a part of the Constitution\"?", ["(a) Berubari Case", "(b) A.K. Gopalan Case", "(c) Privy Purse Case", "(d) Keshwanand Bharti Case"], 3, "In the landmark Kesavananda Bharati v. State of Kerala (1973) case, a 13-judge bench overruled the Berubari opinion and held that the Preamble is an integral part of the Constitution."],
+  [7, "U.P.P.S.C. (Pre) 2012", "10. In which of the following cases the Supreme Court regarded Preamble as a part of the basic structure of India Constitution?", ["(a) Union of India v. Dr. Kohli", "(b) Banarasi Das v. State of U.P.", "(c) Bommai v. Union of India", "(d) Malk Singh v. State of Punjab"], 2, "In S.R. Bommai v. Union of India (1994), the Supreme Court reaffirmed that the Preamble forms part of the Basic Structure of the Constitution."],
+  [7, "U.P.P.C.S. (Pre) 2009", "11. Consider the following statements in regards to the Preamble of Constitution and select the correct one using the code given below -\n1. The Objectives Resolution by Jawaharlal Nehru finally became Preamble\n2. It is non-Justiciable.\n3. It can't be amended\n4. Preamble cannot override the specific provision of the Constitution", ["(a) Only 1 and 2", "(b) Only 1, 2 and 4", "(c) Only 1, 2 and 3", "(d) Only 2, 3 and 4"], 1, "Statements 1, 2, and 4 are true. Statement 3 is false because the Preamble can be amended under Article 368 without altering its basic features (as done in 1976)."],
+  [7, "U.P. Lower (Spl) (Pre) 2008; U.P.P.C.S. (Mains) 2009", "12. What was the exact Constitutional Status of the Indian Republic on 26-1-1950 when the Constitution came into force?", ["(a) A Democratic Republic", "(b) A Sovereign Democratic Republic", "(c) A Sovereign Secular Democratic Republic", "(d) A Sovereign Socialist Secular Democratic Republic"], 1, "On 26 January 1950, the Preamble declared India a 'Sovereign Democratic Republic' ('Socialist' and 'Secular' were added later in 1976)."],
+  [7, "U.P.P.C.S. (Mains) 2008", "13. Which of the following kinds of liberty is not mentioned in the Preamble to the Constitution of India?", ["(a) Freedom of thought", "(b) Freedom of expression", "(c) Freedom of belief", "(d) Economic freedom"], 3, "The Preamble enumerates liberty of thought, expression, belief, faith, and worship—not 'Economic freedom'."],
+  [7, "U.P.P.C.S. (Mains) 2008", "14. Which of the following is correct?", ["(a) Social equality is not guaranteed in our Constitution", "(b) Social equality already existed in our country", "(c) Social equality is guaranteed in our Constitution", "(d) None of the above"], 2, "Social equality is guaranteed through the Preamble ('Equality of status and of opportunity') and Articles 14–18 of Fundamental Rights."],
+  [7, "U.P.P.C.S. (Mains) 2005", "15. Which one of the following describes India as a Secular State?", ["(a) Fundamental Rights", "(b) Preamble to the Constitution", "(c) 9th Schedule", "(d) Directive Principles of state policy"], 1, "The Preamble explicitly proclaims India to be a 'Secular' Republic."],
+  [7, "U.P.P.C.S. (Mains) 2005", "16. Which among the following is the correct expression of the term 'Secular' in India?", ["(a) India has many religions.", "(b) Indians have religious freedom.", "(c) Following the religion depends upon the will of an individual.", "(d) There is no religion of the State in India."], 3, "Indian secularism embodies positive neutrality where the State has no official religion of its own and treats all religions equally."],
+  [7, "U.P.U.D.A./L.D.A. (Pre) 2002; U.P. P.C.S. (Mains) 2004", "17. The ideals and objectives outlined in the Preamble of the Indian Constitution have been further elaborated in", ["(a) The Chapter on Fundamental Rights", "(b) The Chapter on Directive Principles of State Policy", "(c) The Chapter on Directive Principles of State Policy, Fundamental Rights, and Fundamental Duties", "(d) Nowhere else in the text of the Constitution."], 2, "The philosophical vision of the Preamble is elaborated across Part III (Fundamental Rights), Part IV (DPSP), and Part IV-A (Fundamental Duties)."],
+  [7, "U.P. Lower Sub. (Pre) 2004", "18. The Preamble given in the Constitution-\n1. is not enforceable in courts\n2. is important and have utility\n3. describes the aims of governance\n4. helps to give a Judicial meaning to our Constitution\n(Official Key marked *)", ["(a) 1 and 2", "(b) 2 and 3", "(c) 1, 2 and 3", "(d) 2, 3 and 4"], -1, "Note: Marked (*) in official PDF Answer Key because all four statements (1, 2, 3, and 4) are valid attributes of the Preamble."],
+  [7, "U.P. Lower Sub. (Pre) 1998", "19. The goal of Constitution is to secure/assure all its citizens-\n1. Justice Social and Economic\n2. Liberty of Thought and Expression\n3. Equality of Opportunity\n4. Dignity of the Individual\nChoose the correct answer by using code:", ["(a) 1 and 2", "(b) 1, 2 and 3", "(c) 2, 3 and 4", "(d) All above"], 3, "All four goals—social and economic justice, liberty of thought and expression, equality of opportunity, and dignity of the individual—are enshrined in the Preamble."],
+
+  // ================= 9. The Citizenship (6 Qs) =================
+  [8, "U.P.P.C.S. (Pre) 2018; U.P.U.D.A./L.D.A. (Spl) (Mains) 2010", "1. In which Part of the Constitution of India we find the provisions relating to citizenship?", ["(a) PART I", "(b) PART II", "(c) PART VII", "(d) PART IX"], 1, "Part II of the Indian Constitution (Articles 5 to 11) deals with Citizenship."],
+  [8, "U.P. P.C.S. (Mains) 2017", "2. A citizen of India will loose his or her citizenship if he or she\n1. renounces Indian citizenship.\n2. Voluntarily acquires the citizenship of another country.\n3. marries a citizen of another country.\n4. criticizes the government.\nSelect the correct answer using the codes given below:", ["(a) 1, 2 and 3", "(b) 2, 3 and 4", "(c) 1 and 2 only", "(d) 1 and 4 only"], 2, "Under the Citizenship Act, 1955, Indian citizenship is lost by renunciation (1), termination upon voluntarily acquiring foreign citizenship (2), or deprivation—not by marrying a foreigner or criticizing the government."],
+  [8, "U.P.P.C.S. (Mains) 2016", "3. Who among the following is not eligible for registering as overseas citizen of India cardholder under the Citizenship Amendment Act, 2015?", ["(a) A minor child whose parents are an Indian citizen.", "(b) Spouse of foreign origin of an Indian citizen.", "(c) Indian who migrated to Pakistan after partition", "(d) A great grandchild of a person who is a citizen of another country but whose grandparents were a citizen of India at the time of commencement of the Constitution."], 2, "Any person who, or either of whose parents/grandparents/great-grandparents, was ever a citizen of Pakistan or Bangladesh is ineligible for OCI registration."],
+  [8, "U.P. R.O./A.R.O. (Mains) 2016", "4. When was the Citizenship (Amendment) Bill 2019 passed by Parliament?", ["(a) 10 December, 2019", "(b) 11 December, 2019", "(c) 12 December, 2019", "(d) 13 December, 2019"], 1, "The Citizenship (Amendment) Bill, 2019 was passed by Lok Sabha on 9 December 2019 and by Rajya Sabha on 11 December 2019 (receiving Presidential assent on 12 December 2019)."],
+  [8, "U.P.P.C.S. (Mains) 2013", "5. Who/which of the following is competent to prescribe conditions for acquisition of citizenship?", ["(a) Election Commission", "(b) President", "(c) Parliament and State Legislatures jointly", "(d) Parliament"], 3, "Under Article 11 of the Constitution, Parliament has the exclusive power to make any provision with respect to the acquisition and termination of citizenship."],
+  [8, "U.P.P.C.S. (Pre) 1994", "6. The citizenship provided by the Constitution of India is:", ["(a) Dual citizenship", "(b) Single citizenship", "(c) Both of the above", "(d) None of the above"], 1, "Inspired by the British model, the Indian Constitution provides for single uniform citizenship for the whole country."],
+
+  // ================= 10. States and the Union Territories (22 Qs) =================
+  [9, "U.P.P.C.S. (Pre) 2025", "1. Consider the formation of the following States of India and arrange them in correct chronological order starting from the earliest to the last.\n1. Punjab\n2. Arunachal Pradesh\n3. Nagaland\n4. Sikkim\nSelect the correct answer from the code given below:", ["(a) 3, 2, 4, 1", "(b) 3, 4, 1, 2", "(c) 3, 1, 4, 2", "(d) 2, 3, 4, 1"], 2, "Chronological formation: Nagaland (1963 - 3) -> Punjab reorganized (1966 - 1) -> Sikkim (1975 - 4) -> Arunachal Pradesh (1987 - 2)."],
+  [9, "U.P.P.C.S. (Pre) 2025", "2. Who among the following were the members of the Fazal Ali Commission?\n1. K. T. Shah\n2. K. M. Panikkar\n3. P. Sitaramaiah\n4. H. N. Kunjaru\nSelect the correct answer from the code given below:", ["(a) 1 and 3", "(b) 2 and 4", "(c) 2 and 3", "(d) 1 and 2"], 1, "The States Reorganisation Commission (1953) was chaired by Fazl Ali with two other members: K.M. Panikkar and H.N. Kunzru."],
+  [9, "U.P.P.C.S. (Pre) 2024; U.P.P.C.S. (Mains) 2006", "3. Which one of the following pairs is not correctly matched?", ["(a) Equality before Law - Guaranteed to both citizens and non-citizens.", "(b) Equality to opportunity in public employment - guaranteed only to Indian citizens.", "(c) Creating a new State - Power of Parliament.", "(d) Altering the name of a State - Power of a State Legislature."], 3, "Under Article 3, altering the name, area, or boundaries of a State is the exclusive power of Parliament, not the State Legislature."],
+  [9, "U.P.P.C.S. (Pre.) 2023", "4. Given below are two statements, one is labelled as Assertion (A) and other as Reason (R):\nAssertion (A): The President can recommend to the Parliament to change the boundary of any state after seeking views of the concerned Legislature of that state on the subject within specified period.\nReason (R): It is not mandatory for the President to accept the proposal of the concerned State Legislature.\nSelect the correct answer using the code given below:", ["(a) (A) is true, but (R) is false.", "(b) Both (A) and (R) are true, but (R) is not correct explanation of (A).", "(c) (A) is false, but (R) is true.", "(d) Both (A) and (R) are true, and (R) is correct explanation of (A)."], 1, "Under Article 3 proviso, the President refers the Bill to the concerned State Legislature to express its views within a specified period, but neither the President nor Parliament is bound by those views."],
+  [9, "U.P.P.C.S. (Pre) 2021", "5. Consider the formation of following States and arrange these in chronological order:\nI. Goa\nII. Telangana\nIII. Jharkhand\nIV. Haryana\nSelect the correct answer from the codes given below:", ["(a) I, II, III, IV", "(b) IV, I, III, II", "(c) IV, II, III, I", "(d) IV, III, I, II"], 1, "Chronological order: Haryana (1966 - IV) -> Goa (1987 - I) -> Jharkhand (2000 - III) -> Telangana (2014 - II)."],
+  [9, "U.P.P.C.S. (Pre) 2019", "6. With reference to the federal system in India, which of the statements is/are correct?\n1. States have no right to secede from the Union under the constitution of India.\n2. Just advocacy of secession will have the protection of freedom of expression.\nSelect the correct answer from the codes given below:", ["(a) 1 only", "(b) 2 only", "(c) Both 1 and 2", "(d) Neither 1 nor 2"], 0, "India is an 'indestructible Union of destructible states'—states have no right to secede (1 is true). Under Article 19(2), sovereignty and integrity of India is a ground for reasonable restriction, so advocating secession is not protected (2 is false)."],
+  [9, "U.P. P.C.S. (Pre) 2018", "7. Which of the following is the first State in India formed on the basis of Languages?", ["(a) Kerala", "(b) Madhya Pradesh", "(c) Andhra Pradesh", "(d) Uttar Pradesh"], 2, "Andhra State (later Andhra Pradesh) was created on 1 October 1953 as the first linguistic state in independent India."],
+  [9, "U.P. R.O./A.R.O. (Mains) 2017", "8. Match List-I with List-II and select the correct answer using the codes given below the lists:\nList-I (State):\nA. Nagaland\nB. Jharkhand\nC. Telangana\nD. Sikkim\nList-II (Year of coming to existence):\n1. 2000\n2. 1962\n3. 1975\n4. 2014\n(Official Key marked *)", ["(a) A-4, B-1, C-2, D-3", "(b) A-2, B-1, C-4, D-3", "(c) A-3, B-2, C-1, D-4", "(d) A-1, B-3, C-4, D-2"], -1, "Note: Marked (*) in official PDF Answer Key because Nagaland became a full state on 1 Dec 1963 (though the State of Nagaland Act was passed in 1962)."],
+  [9, "U.P.P.C.S. (Mains) 2008, 2013; U.P.P.C.S. (Pre) 1990", "9. The power to carve out a new State is vested in", ["(a) The Parliament", "(b) The President", "(c) The Council of Ministers", "(d) States' Reorganisation Commission"], 0, "Article 3 vests the exclusive constitutional authority to form a new state or alter boundaries in the Parliament of India."],
+  [9, "U.P.P.C.S. (R.I.) 2014", "10. By which Constitutional amendment Delhi was given the status of National Capital Region?", ["(a) 67th", "(b) 69th", "(c) 68th", "(d) 70th"], 1, "The 69th Constitutional Amendment Act, 1991 inserted Articles 239AA and 239AB, designating the Union Territory of Delhi as the National Capital Territory of Delhi."],
+  [9, "U.P.P.C.S. (Pre) 2013", "11. Which among the following is not a 'constitutional provision for the formation of new States?", ["(a) Increase the area of any State.", "(b) Diminish the area of any State.", "(c) Alter the name of any State.", "(d) A State may include a Union territory."], 3, "Article 3 empowers Parliament to form a new state, increase/diminish the area of any state, or alter boundaries/names—not to unilaterally merge/include a UT as a state's own unilateral power."],
+  [9, "U.P.P.C.S. (Mains) 2013", "12. The number of Indian States after the formation of Telangana will be", ["(a) 27", "(b) 28", "(c) 29", "(d) 30"], 1, "Note: Official PDF Answer Key lists (b) 28 (reflecting current count of 28 States post-2019 J&K reorganization; in 2014 Telangana was the 29th state)."],
+  [9, "U.P.P.C.S. (Mains) 2013", "13. Which of the following is not a Union Territory?", ["(a) The Andaman and Nicobar Islands", "(b) Daman and Diu", "(c) Goa", "(d) Puducherry"], 2, "Goa attained full statehood in 1987 (56th Amendment Act) and is a State, not a Union Territory."],
+  [9, "U.P. Lower Sub. (Pre) 2013", "14. Sikkim became a state of India under-", ["(a) 30th Amendment", "(b) 32nd Amendment", "(c) 35th Amendment", "(d) 40th Amendment"], 2, "The 35th Constitutional Amendment Act (1974) granted Sikkim the status of an 'Associate State' of India (followed by full statehood under the 36th Amendment Act, 1975)."],
+  [9, "U.P.R.O./A.R.O. (Mains) 2013", "15. Which of the following States of India was formed in 1948? (Official Key marked *)", ["(a) West Bengal", "(b) Assam", "(c) Punjab", "(d) Himachal Pradesh"], -1, "Note: Marked (*) in official PDF Answer Key; Himachal Pradesh was formed as a Chief Commissioner's Province on 15 April 1948 and attained full statehood in 1971."],
+  [9, "U.P.P.C.S. (Mains) 2011", "16. Which one of the following is not correct in the matter of formation of new States?", ["(a) Parliament may by law form a new State.", "(b) Such law shall contain provisions for the amendment of the First Schedule and the Fourth Schedule of the Constitution.", "(c) Such law shall be deemed to be an amendment of the Constitution for the purpose of Article 368.", "(d) No Bill for enacting such law shall be introduced in the Parliament unless it has been referred to the Legislature of the States, whose areas, boundaries or name is affected."], 2, "Article 4 explicitly states that laws made under Articles 2 or 3 are NOT deemed to be amendments of the Constitution for the purposes of Article 368 (they pass by simple majority)."],
+  [9, "U.P.P.C.S. (Pre) 2009; U.P.P.C.S. (Mains) 2006", "17. Which one of the following is the correct chronological order of the formation of the following Indian States? Use the code given below to select the correct answer:\n1. Chhattisgarh\n2. Arunachal Pradesh\n3. Jharkhand\n4. Sikkim", ["(a) 4, 1, 3, 2", "(b) 4, 2, 1, 3", "(c) 3, 2, 1, 4", "(d) 1, 4, 2, 3"], 1, "Chronological order: Sikkim (1975 - 4) -> Arunachal Pradesh (1987 - 2) -> Chhattisgarh (1 Nov 2000 - 1) -> Jharkhand (15 Nov 2000 - 3)."],
+  [9, "U.P.P.C.S. (Pre) 2008", "18. According to Article 1 of Indian Constitution, India is -", ["(a) Group of States", "(b) Federation of States", "(c) Confederation of States", "(d) The Union of States"], 3, "Article 1(1) declares: 'India, that is Bharat, shall be a Union of States.'"],
+  [9, "U.P.P.C.S. (Mains) 2008", "19. Consider the following statement and answer using codes given below:\n1. The term 'Union of States' has been used in the constitution because Indian States have no right of separation.\n2. S.K. Dhar Commission had given preference to administrative convenience rather language for re-organisation of States.\n3. Congress Committee including Jawaharlal Nehru, Sardar Patel, and Pattabhi Sitaramayya was not in favour of reorganisation of States on the basis of language.\nWhich of the following statement is/are correct?", ["(a) Only 1", "(b) Only 1 and 2", "(c) Only 1 and 3", "(d) All of the above"], 3, "All three statements are historically and constitutionally accurate (JVP Committee in 1949 rejected language as the immediate basis for reorganization)."],
+  [9, "U.P.P.C.S. (Pre) 2002", "20. How many States and Union Territories are there in India?", ["(a) 25 States and 7 Union Territories", "(b) 28 States and 7 Union Territories (including national capital territory-1)", "(c) 24 States and 6 Union Territories", "(d) None of the above"], 3, "India currently has 28 States and 8 Union Territories, making (d) None of the above the accurate option."],
+  [9, "U.P.P.C.S. (Pre) 1999", "21. Assertion (A): India is not a Union.\nReason (R): Union Parliament has the power to alter the area, boundary, and name of any State even without its consent.\nSelect the correct answer from the code given below:", ["(a) Both (A) and (R) are true, and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true, but (R) is not the correct explanation of (A).", "(c) (A) is true, but (R) is false.", "(d) (A) is false, but (R) is true."], 3, "Assertion (A) is false because Article 1 explicitly declares India to be a 'Union of States'. Reason (R) is true under Article 3."],
+  [9, "U.P.P.C.S. (Pre) 1990", "22. The Commission for Reorganisation of States on the basis of language was established in- (Official Key marked *)", ["(a) 1856", "(b) 1956", "(c) 1957", "(d) 1960"], -1, "Note: Marked (*) in official PDF Answer Key because the States Reorganisation Commission (Fazl Ali Commission) was appointed in December 1953 and the States Reorganisation Act was passed in 1956."],
+
+  // ================= 11. Fundamental Rights (64 Qs) =================
+  [10, "U.P.P.C.S. (Pre) 2024", "1. Which of the following freedoms is not guaranteed by the Indian Constitution under Article 19?", ["(a) Freedom to assemble peacefully and without arms", "(b) Freedom to own, acquire and dispose of property", "(c) Freedom to move freely throughout the country", "(d) Freedom to practise any trade or profession"], 1, "Article 19(1)(f) (right to acquire, hold and dispose of property) was deleted by the 44th Constitutional Amendment Act, 1978."],
+  [10, "U.P.P.C.S. (Pre) 2024", "2. Which of the following are envisaged by the Right against Exploitation in the Constitution of India?\n1. Abolition of untouchability\n2. Prohibition of human trafficking and forced labour\n3. Prohibition of employment of children in factories and mines\n4. Protection of interests of minorities\nSelect the correct answer from the codes given below:", ["(a) 2 and 3", "(b) 3 and 4", "(c) 1 and 2", "(d) 1 and 4"], 0, "The Right against Exploitation (Articles 23 and 24) covers prohibition of human trafficking/forced labour (Art. 23) and prohibition of child labour in hazardous industries (Art. 24)."],
+  [10, "U.P. R.O./A.R.O. (Pre) 2023", "3. Which of the following statement(s) is/are incorrect?\nA. The provisions relating to Fundamental Rights in Part III of the Constitution are based on the Bill of Rights of the U.S.A.\nB. The 'Right to Die' is a Fundamental Right under Article 21 of the Constitution.\nC. The Constitution of India is a wholly federal Constitution.\nD. According to the Indian Constitution, Fundamental Rights can be abrogated.", ["(a) Only B, C and D", "(b) Only C and D", "(c) Only B and C", "(d) Only B"], 0, "Statements B, C, and D are incorrect: 'Right to Die' is not a Fundamental Right (Gian Kaur case); India is quasi-federal; Fundamental Rights cannot be permanently abrogated."],
+  [10, "U.P.R.O./A.R.O. (Pre) (Re-Exam) 2023", "4. According to which Article of the Indian Constitution, \"No citizen shall, on grounds only of religion, race, caste, sex, descent, place of birth, residence or any of them, be ineligible for, or discriminated against in respect of, any employment or office under the State\"?", ["(a) Article 17", "(b) Article 15", "(c) Article 16 (2)", "(d) Article 16 (4)"], 2, "Article 16(2) prohibits discrimination in public employment on the seven specified grounds of religion, race, caste, sex, descent, place of birth, or residence."],
+  [10, "U.P.P.C.S. (Pre.) 2023", "5. Which of the following is not a part of the Article 20 of the Constitution of India?", ["(a) Double Jeopardy Clause", "(b) Ex-post Facto Law", "(c) Prohibition Against Torture", "(d) Prohibition against Self Incrimination"], 2, "Article 20 includes protection against ex-post facto laws [20(1)], double jeopardy [20(2)], and self-incrimination [20(3)]. Prohibition against torture is read under Article 21."],
+  [10, "U.P.R.O./A.R.O. (Pre) (Re-Exam) 2023", "6. Which one of the following pairs is not correctly matched? (Fundamental Rights - Articles)", ["(a) Right to Freedom - Articles 19-22", "(b) Right to Freedom of Religion - Articles 23-24", "(c) Cultural and Educational Rights - Articles 29-30", "(d) Right to Equality - Articles 14-18"], 1, "Right to Freedom of Religion is covered under Articles 25–28, whereas Articles 23–24 deal with Right against Exploitation."],
+  [10, "U.P.P.C.S. (Pre) 2021", "7. Who among the following person said for the Fundamental Rights \"a pledge to our people and a pact with the civilized world\"?", ["(a) Pt. Jawahar Lal Nehru", "(b) Dr. Bhim Rao Ambedkar", "(c) Dr. Rajendra Prasad", "(d) Dr. S. Radha Krishnan"], 3, "Dr. Sarvepalli Radhakrishnan described the Fundamental Rights as 'a pledge to our people and a pact with the civilized world' in the Constituent Assembly."],
+  [10, "U.P. B.E.O. (Pre) 2019", "8. Following are two statements, one is labelled as Assertion (A) and other as Reason (R):\nAssertion (A): Untouchability is worst form of structural violence.\nReason (R): Untouchability has been practiced in the name of religious sanctions.\nConsider the above statements and select the correct answer from the codes given below:", ["(a) Both (A) and (R) are true and (R) is correct explanation of (A).", "(b) Both (A) and (R) are true but (R) is not the correct explanation of (A).", "(c) (A) is true but (R) is false.", "(d) (A) is false but (R) is true."], 0, "Both Assertion (A) and Reason (R) are true, and religious/social sanctions historically explain why untouchability functioned as institutionalized structural violence."],
+  [10, "U.P.P.C.S. (Pre) 2019", "9. Given below are two statements, one is labelled as Assertion (A) and the other as Reason (R).\nAssertion (A): Article 30 of the Constitution of India does not define the term 'minorities'.\nReason (R): The Constitution recognises only linguistic and religious minorities.\nSelect the correct answer from the codes given below:", ["(a) Both (A) and (R) are true and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true, but (R) is not the correct explanation of (A).", "(c) (A) is true, but (R) is false.", "(d) (A) is false, but (R) is true."], 1, "Both statements are true: the Constitution does not define the word 'minority', though Article 30(1) refers specifically to religious and linguistic minorities."],
+  [10, "U.P. P.C.S. (Pre) 2019", "10. Which of the following is NOT correctly matched?", ["(a) Habeas corpus - 'To have body of'", "(b) Mandamus - 'We command'", "(c) Prohibition - 'To be certified'", "(d) Quo-warranto - 'By what authority'"], 2, "'To be certified' is the literal meaning of Certiorari, whereas Prohibition means 'to forbid'."],
+  [10, "U.P.B.E.O. (Pre) 2019", "11. Match list-I with List-II and select the correct answer from the code given below:\nList I:\n(A) Abolition of Titles\n(B) Freedom to manage Religious Affairs\n(C) Protection of Language of Minorities\n(D) Right to Education\nList - II:\n(i) Article 29\n(ii) Article 21-A\n(iii) Article 18\n(iv) Article 26", ["(a) A-(iii), B-(ii), C-(i), D-(iv)", "(b) A-(iv), B-(iii), C-(ii), D-(i)", "(c) A-(ii), B-(iii), C-(iv), D-(i)", "(d) A-(iii), B-(iv), C-(i), D-(ii)"], 3, "Abolition of Titles: Art. 18 (iii); Religious Affairs: Art. 26 (iv); Protection of Language of Minorities: Art. 29 (i); Right to Education: Art. 21-A (ii)."],
+  [10, "U.P.P.C.S. (Mains) 2003, 2013, 2015; U.P. R.O./A.R.O. (Pre) 2017", "12. Which Article of the Indian Constitution eradicates untouchability and prohibits its practice in any form?", ["(a) Article 16", "(b) Article 17", "(c) Article 18", "(d) Article 15"], 1, "Article 17 abolishes 'untouchability' and forbids its practice in any form, making enforcement of any disability arising out of it a punishable offence."],
+  [10, "U.P.P.C.S. (Pre) 2017", "13. Which one of the following does not fall within the purview of article 21 of the Constitution?", ["(a) Medical aid to injure by a doctor", "(b) Sexual Harassment of Women at work place.", "(c) Pollution of the quality of water.", "(d) Capital punishment"], 3, "The Supreme Court has held capital punishment (death penalty) to be constitutionally valid under 'procedure established by law' in rarest of rare cases, whereas (a), (b), and (c) are protected rights under Article 21."],
+  [10, "U.P. P.C.S. (Mains) 2009, 2011, 2017; U.P.P.C.S. (Pre) 2005", "14. Which provision of the fundamental rights is directly related to the exploitation of children?", ["(a) Art. 17", "(b) Art. 19", "(c) Art. 23", "(d) Art. 24"], 3, "Article 24 prohibits the employment of children below the age of 14 years in any factory, mine, or other hazardous employment."],
+  [10, "U.P.P.C.S. (Pre) 2017", "15. Which one of the following statements is correct?", ["(a) Rights are claims of the State against the citizens", "(b) Rights are privileges which are incorporated in the Constitution of a state", "(c) Rights are claims of the citizens against the State.", "(d) Rights are privileges of a few citizens against the many"], 2, "Fundamental Rights are primarily enforceable claims of individuals/citizens against arbitrary actions of the State."],
+  [10, "U.P.P.C.S. (Mains) 2016", "16. Assertion (A): The State can treat unequal differently with the objective of creating a level playing field in the social, economic and political spheres.\nReason (R): Among equals the law should be equal and equally administered.\nIn the context of above statements select the correct answer.", ["(a) (A) is true, but (R) is false.", "(b) (A) is false, but (R) is true.", "(c) Both (A) and (R) are correct, but (R) is not correct explanation of (A).", "(d) Both (A) and (R) are true and (R) is the correct explanation of (A)."], 3, "Equal protection of the laws under Article 14 means 'like should be treated alike' (R), which logically permits reasonable classification to uplift unequals and create a level playing field (A)."],
+  [10, "U.P.P.C.S. (Mains) 2016", "17. In the Indian Constitution the 'Right to Freedom' is granted by four Articles which are", ["(a) Article - 19 to Article - 22", "(b) Article - 16 to Article - 19", "(c) Article - 17 to Article - 20", "(d) Article - 18 to Article - 21"], 0, "The Right to Freedom group consists of four Articles: Articles 19, 20, 21 (including 21A), and 22."],
+  [10, "U.P.P.C.S. (Mains) 2016", "18. Assertion (A): The state shall provide free and compulsory education to all children of the age group of six to fourteen years.\nReason (R): In a democratic society, right to education is indispensable in the interpretation of the right to development as a human right.\nIn the context of above statements select the correct answer.", ["(a) Both (A) and (R) are true, and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true, but (R) is not the correct explanation of (A).", "(c) (A) is true, but (R) is false.", "(d) (R) is true, but (A) is true."], 0, "Both statements are true and (R) explains the democratic human-rights rationale behind Article 21A (86th Amendment Act, 2002)."],
+  [10, "U.P. R.O./A.R.O. (Pre) (Re-Exam) 2016", "19. Which of the following is NOT correctly matched? (Fundamental Right - Article)", ["(a) Abolition of Untouchability - Art. 17", "(b) Protection against arrest and detention - Art. 23", "(c) Freedom of Religion - Art. 25", "(d) Protection of Interest of Minorities - Art. 29"], 1, "Protection against arrest and detention in certain cases is guaranteed under Article 22, whereas Article 23 prohibits human trafficking and forced labour."],
+  [10, "U.P. Lower Sub. (Mains) 2015", "20. Under which Article of the Constitution of India, Fundamental Rights have been provided to citizens?", ["(a) Articles 112 to 115", "(b) Article 12 to 35", "(c) Articles 222 to 235", "(d) None of these"], 1, "Part III of the Constitution, spanning Articles 12 to 35, deals with Fundamental Rights."],
+  [10, "U.P.R.O./A.R.O. (Pre) 2014; U.P. Lower Sub. (Pre) 2015", "21. In the Indian Constitution, the right to equality is granted by five Articles, They are:", ["(a) Article 16 to Article 20", "(b) Article 15 to Article 19", "(c) Article 14 to Article 18", "(d) Article 13 to Article 17"], 2, "Right to Equality comprises five Articles: Article 14, Article 15, Article 16, Article 17, and Article 18."],
+  [10, "U.P.P.C.S. (Mains) 2015", "22. Which one of the following pairs is not correctly matched?", ["(a) Prohibition of trafficking in human beings and forced labour - Article 23", "(b) Protection of interests of minorities - Article 29", "(c) Right to constitutional remedies - Article 32", "(d) Right of minorities to establish and administer educational institutions - Article 31"], 3, "The right of minorities to establish and administer educational institutions is guaranteed under Article 30, not Article 31 (which dealt with Property and was repealed)."],
+  [10, "U.P.P.C.S. (Mains) 2010, 2012, 2015", "23. The Guardian of Fundamental Rights is", ["(a) Judiciary", "(b) Executive", "(c) Parliament", "(d) None of these"], 0, "The Judiciary (Supreme Court under Article 32 and High Courts under Article 226) acts as the protector and guarantor of Fundamental Rights."],
+  [10, "U.P. Lower Sub. (Pre) 2015", "24. Which one of the following writs is regarded as the greatest safeguard for the liberty of a person?", ["(a) Mandamus", "(b) Habeas Corpus", "(c) Certiorari", "(d) Prohibition"], 1, "Habeas Corpus ('to have the body of') protects individuals against unlawful or arbitrary detention and is called the bulwark of personal liberty."],
+  [10, "U.P.P.C.S. (Pre) (Re. Exam) 2015", "25. Which one of the following writs can be issued by a High Court to secure the liberty of the individual?", ["(a) Mandamus", "(b) Quo-warranto", "(c) Habeas Corpus", "(d) Prohibition"], 2, "Under Article 226, a High Court issues the writ of Habeas Corpus to secure the release of a person illegally detained."],
+  [10, "U.P. Lower Sub. (Pre) 2013; U.P.P.C.S. (Pre) (Re. Exam) 2015", "26. The Supreme Court of India has propounded the 'Doctrine of Basic Structure' of the Constitution in which of the following cases?", ["(a) Golaknath Vs. Punjab State", "(b) Sajjan Singh Vs. Rajasthan State", "(c) Keshavananda Bharati Vs. Kerala State", "(d) Shankari Prasad Vs. Indian Union"], 2, "In Kesavananda Bharati v. State of Kerala (1973), the Supreme Court held that Parliament cannot alter the 'Basic Structure' of the Constitution."],
+  [10, "U.P.P.C.S. (Mains) 2013, 2015; U.P. Lower Sub. (Pre) 2004, 2013", "27. By which of the following has the Right to Property been omitted?", ["(a) 40th Amendment of Constitution", "(b) 42nd Amendment of Constitution", "(c) 44th Amendment of Constitution", "(d) 46th Amendment of Constitution"], 2, "The 44th Constitutional Amendment Act, 1978 omitted the Right to Property from Part III (Articles 19(1)(f) and 31) and made it a legal right under Article 300A."],
+  [10, "U.P.P.C.S. (Mains) 2015", "28. Which one of the following is not among the six fundamental rights provided by the Constitution of India?", ["(a) Right to Equality", "(b) Right to protest", "(c) Right against Exploitation", "(d) Right to Freedom of Religion"], 1, "The six broad categories of Fundamental Rights are Equality, Freedom, Against Exploitation, Freedom of Religion, Cultural & Educational Rights, and Constitutional Remedies. Peaceful protest is a facet of Article 19(1)(a)-(b), not one of the six titled headings."],
+  [10, "U.P.P.C.S. (Pre) 2007; U.P.P.C.S. (Pre) (Re. Exam) 2015", "29. Which of the following fundamental rights is not available to foreign citizens?", ["(a) Equality Before Law", "(b) Right to Freedom of Expression", "(c) Right to Freedom of Life and liberty", "(d) Right Against Exploitation"], 1, "Articles 15, 16, 19, 29, and 30 are available exclusively to citizens of India. Thus, Article 19(1)(a) (Freedom of Speech and Expression) is not available to foreigners."],
+  [10, "U.P.P.C.S. (Mains) 2014", "30. In which Article of Indian Constitution Doctrine of Due Process of Law is included?", ["(a) 11", "(b) 16", "(c) 21", "(d) 26"], 2, "Following the Maneka Gandhi v. Union of India (1978) judgment, the Supreme Court read the American doctrine of 'Due Process of Law' into Article 21."],
+  [10, "U.P.P.C.S. (Mains) 2014", "31. The word 'Hindu' in Article 25 of the Constitution of India does not include -", ["(a) Buddhists", "(b) Jains", "(c) Parsis", "(d) Sikhs"], 2, "Explanation II to Article 25 states that reference to Hindus shall be construed as including persons professing the Sikh, Jaina, or Buddhist religion—not Parsis."],
+  [10, "U.P.P.C.S. (Mains) 2013", "32. Which Article gives safeguard to the Fundamental Rights of arrested person?", ["(a) Article 15", "(b) Article 17", "(c) Article 21", "(d) Article 22"], 3, "Article 22 grants protection against arbitrary arrest and detention, including the right to be informed of grounds of arrest, consult a lawyer, and be produced before a magistrate within 24 hours."],
+  [10, "U.P.P.C.S. (Mains) 2009; U.P. Lower Sub. (Pre) 2013", "33. Under the Preventive Detention Act, a person can be arrested without trial for", ["(a) 1 month", "(b) 3 months", "(c) 6 months", "(d) 9 months"], 1, "Under Article 22(4), no law providing for preventive detention shall authorize the detention of a person for a longer period than 3 months unless an Advisory Board reports sufficient cause."],
+  [10, "U.P. Lower Sub. (Pre) 2013", "34. Which one of the following statements is not correct?", ["(a) K.M. Munshi was one of the members of the drafting committee of the Constitution.", "(b) The Constitution of India was adopted by the Constituent Assembly.", "(c) The Panchayati Raj was recommended by Balwant Rai Mehta Committee Report-1957.", "(d) The President of India is the Guardian of Fundamental Rights under the Constitution."], 3, "Statement (d) is incorrect because the Supreme Court (Judiciary), not the President of India, is the Guardian of Fundamental Rights."],
+  [10, "U.P.P.C.S. (Spl) (Mains) 2004; U.P. P.S.C. (GIC) 2010", "35. Which one of the following rights was described by Dr. B.R. Ambedkar as the 'Heart and Soul of the Constitution'?", ["(a) Right to Freedom of Religion", "(b) Right to Property", "(c) Right to Equality", "(d) Right to Constitutional Remedies"], 3, "Dr. B.R. Ambedkar called Article 32 (Right to Constitutional Remedies) the very 'heart and soul of the Constitution' because without it, Fundamental Rights would be meaningless."],
+  [10, "U.P.P.S.C. (GIC) 2010", "36. Which one of the following rights is available to all persons under the Indian Constitution?", ["(a) Right to Equal Protection of the Law.", "(b) Right Against Discrimination.", "(c) Right to Freedom of Speech and Expression.", "(d) Cultural and Educational Rights."], 0, "Article 14 (Equality before law and Equal protection of the laws) applies to 'any person', including both citizens and foreigners."],
+  [10, "U.P. U.D.A./L.D.A. (Pre) 2001, 2010", "37. Bonded Labour was abolished in India, by an Act of Parliament enacted in the year -", ["(a) 1971", "(b) 1976", "(c) 1979", "(d) 1981"], 1, "To give effect to Article 23, Parliament enacted the Bonded Labour System (Abolition) Act in 1976."],
+  [10, "U.P.P.C.S. (Mains) 2009", "38. Which of the following is correct?", ["(a) The Nehru Report (1928) had advocated the inclusion of Fundamental Rights in the Constitution of India.", "(b) The Government of India Act, 1935 referred to Fundamental Rights.", "(c) The August Offer, 1940, included the Fundamental Rights.", "(d) The Cripps Mission 1942 referred to Fundamental Rights."], 0, "The Motilal Nehru Report of 1928 explicitly demanded a declaration of Fundamental Rights for Indians in the future Constitution."],
+  [10, "U.P.P.C.S. (Mains) 2009", "39. Which of the following Articles of the Indian Constitution guarantees equality of opportunity to all citizens of India in matters relating to public employment?", ["(a) Article 15", "(b) Article 16 (1) and 16(2)", "(c) Article 16(3)", "(d) Article 16 (3), (4) and (5)"], 1, "Article 16(1) and 16(2) lay down the general rule of equality of opportunity for all citizens in public employment."],
+  [10, "U.P. Lower Sub. (Pre) 2009", "40. Which one of the following is not correctly matched?", ["(a) Article 23 - Prohibition of traffic in human and forced labour", "(b) Article 24 - Prohibition of employment of children in factories", "(c) Article 26 - Freedom to manage religious affairs", "(d) Article 29 - Rights to establishment and administration of educational institutions by minorities"], 3, "Right of minorities to establish and administer educational institutions is under Article 30, while Article 29 protects the language, script, and culture of minorities."],
+  [10, "U.P.P.C.S. (Spl) (Mains) 2008", "41. Which one of the following is not included in the fundamental right to equality as enshrined in the Indian Constitution?", ["(a) Equality before law", "(b) Social equality", "(c) Equal opportunity", "(d) Economic equality"], 3, "Articles 14–18 guarantee legal equality (Art. 14), social equality (Arts. 15, 17, 18), and equality of opportunity (Art. 16), whereas economic equality is an objective under DPSP (Art. 39)."],
+  [10, "U.P.P.C.S. (Mains) 2008", "42. Which one of the following rights cannot be suspended or restricted even during National Emergency?", ["(a) Right to reside and settle in any part of the country.", "(b) Right to life and personal liberty.", "(c) Right to move freely throughout the territory of India", "(d) Right to carry on any profession or business."], 1, "Under Article 359 (as amended by the 44th Amendment Act, 1978), enforcement of Articles 20 and 21 (Right to life and personal liberty) can never be suspended even during a National Emergency."],
+  [10, "U.P.P.C.S. (Mains) 2007", "43. Match List-I with List-II and select the correct answer by using the code given below the list:\nList-I:\nA. Fundamental Duties\nB. Parliament can amend Fundamental Rights\nC. Doctrine of Basic Structure\nD. Prohibition of Trafficking in Human Beings\nList-II:\n1. Minerva Mills Case\n2. Article 23 of the Constitution\n3. 42nd Amendment of the Constitution\n4. Keshvanand Bharti Case", ["(a) A-3, B-4, C-1, D-2", "(b) A-4, B-3, C-2, D-1", "(c) A-2, B-1, C-4, D-3", "(d) A-1, B-2, C-3, D-4"], 0, "Fundamental Duties: 42nd Amendment (3); Parliament can amend FRs: Kesavananda Bharati (4); Basic Structure: Minerva Mills (1); Trafficking prohibition: Art. 23 (2)."],
+  [10, "U.P.P.C.S. (Pre) 2006", "44. Right to education to all children between the age group of 6 to 14 years is -", ["(a) Included in the Directive Principles of State Policy", "(b) A Fundamental Right", "(c) A Statutory Right", "(d) None of the above"], 1, "The 86th Constitutional Amendment Act, 2002 inserted Article 21A, making free and compulsory education for children aged 6–14 years a Fundamental Right."],
+  [10, "U.P.P.C.S. (Spl) (Mains) 2004", "45. Which Article of the Constitution ensure the freedom of the Press?", ["(a) Article 16", "(b) Article 19", "(c) Article 22", "(d) Article 31"], 1, "Freedom of the Press is implicitly guaranteed as an integral part of Freedom of Speech and Expression under Article 19(1)(a)."],
+  [10, "U.P.P.C.S. (Pre) 2003; U.P.P.C.S. (Mains) 2004", "46. Which one of the following rights is available under Article 19(1)(d) read with Article 21:", ["(a) Right to travel abroad", "(b) Right to Shelter", "(c) Right to privacy", "(d) Right to information"], 2, "In Kharak Singh v. State of U.P. and later K.S. Puttaswamy (2017), the Right to Privacy was recognized under Article 21 read with Article 19(1)(d)."],
+  [10, "U.P. Lower Sub. (Spl) (Pre) 2004", "47. An accused of any offence cannot be compelled to be a witness against himself, which Article of Indian Constitution provides for this?", ["(a) Article 20(3)", "(b) Article 21", "(c) Article 22", "(d) Article 74"], 0, "Article 20(3) embodies the protection against self-incrimination: 'No person accused of any offence shall be compelled to be a witness against himself.'"],
+  [10, "U.P. Lower Sub. (Pre) 2004; U.P.P.C.S. (Pre) 1992", "48. Under the Indian Constitution who is the guardian of the fundamental rights?", ["(a) Parliament", "(b) President", "(c) Supreme Court", "(d) Cabinet"], 2, "The Supreme Court of India is the constitutional custodian and guardian of Fundamental Rights."],
+  [10, "U.P. Lower Sub. (Spl) (Pre) 2003; U.P. Lower Sub. (Pre) 2002", "49. The child labour was prohibited in hazardous employment by-", ["(a) Indian Constitution", "(b) The judgment of Supreme Court on December 10, 1996", "(c) United Nations Charter", "(d) All of the above"], 3, "Prohibition of child labour in hazardous work is mandated by Article 24 of the Constitution, reinforced by the SC in M.C. Mehta v. State of Tamil Nadu (10 Dec 1996), and aligned with UN conventions."],
+  [10, "U.P. Lower Sub. (Pre) 2002", "50. Fundamental Rights -", ["(a) Cannot be suspended", "(b) Can be suspended by order of Prime Minister", "(c) Can be suspended on the will of President", "(d) Can be suspended during Emergency"], 3, "Fundamental Rights (except Articles 20 and 21) can be suspended during the operation of a National Emergency under Articles 358 and 359."],
+  [10, "U.P.P.C.S. (Mains) 2002", "51. Which of the following rights are not available to all persons in India?\n1. Equality Before the Law\n2. Right Against Discrimination\n3. Freedom to Move Freely throughout the Country\n4. Right to Contest Election\nSelect your answer by using the code given below:", ["(a) 1, 3, 4", "(b) 1, 2, 4", "(c) 1, 2, 3", "(d) 2, 3, 4"], 3, "Equality before law (Art. 14) is available to all persons (citizens and foreigners), whereas Rights 2 (Art. 15), 3 (Art. 19), and 4 (voting/contesting elections) are available only to Indian citizens."],
+  [10, "U.P.U.D.A./L.D.A. (Pre) 2001", "52. The provision of 'Right to Freedom of Religion' includes -\n(I) Freedom of propagation of religion\n(II) Right to wear and carry 'Kirpans' by Sikhs\n(III) State's right to make laws for social reforms\n(IV) Right to conversion of religion of people by religious bodies\nChoose the correct answer from given codes:", ["(a) I, II and III", "(b) II, III and IV", "(c) III and IV", "(d) All of above"], 0, "Article 25 covers (I), (II), and (III), while forcible or fraudulent conversion (IV) is not protected under the right to propagate religion (Rev. Stanislaus case)."],
+  [10, "U.P.U.D.A./L.D.A. (Pre) 2001", "53. In which petition, Judiciary orders Executives to perform their duty?", ["(a) Habeas Corpus", "(b) Mandamus", "(c) Prohibition", "(d) Quo-Warranto"], 1, "Mandamus ('We command') is a writ issued by a higher court to a public official or body commanding them to perform a mandatory public duty they have failed or refused to perform."],
+  [10, "U.P.P.C.S. (Pre) 2000", "54. Which one of the following Articles of the Indian Constitution belongs to a different category: (Official Key marked *)", ["(a) Art. 14", "(b) Art. 15", "(c) Art. 16", "(d) Art. 19"], -1, "Note: Marked (*) in official PDF Answer Key because while Art. 19 falls under Right to Freedom (unlike Arts. 14–16 under Right to Equality), Art. 14 also differs from Arts. 15, 16, 19 by applying to non-citizens as well."],
+  [10, "U.P.P.C.S. (Pre) 1999", "55. The main object of Article 13 of the Indian Constitution is to secure the Paramountcy of the Constitution regarding:", ["(a) Directive Principles of State Policy", "(b) Fundamental Rights", "(c) Fundamental Duties", "(d) All of the above"], 1, "Article 13 declares all pre-constitutional and post-constitutional laws void to the extent they are inconsistent with or abridge Fundamental Rights (Part III), establishing judicial review."],
+  [10, "U.P.P.C.S. (Pre) 1999", "56. Which one of the following Articles of the Indian Constitution puts an absolute limitation on the legislative power:", ["(a) Article 14", "(b) Article 15", "(c) Article 16", "(d) Article 17"], 0, "Article 14 ('The State shall not deny to any person equality before the law...') imposes an absolute constitutional limitation against arbitrary legislative action."],
+  [10, "U.P.P.C.S. (Pre) 1999", "57. Which of the following enabled the Supreme Court of India to deduce a fundamental right to equal pay for equal work:", ["(a) The word 'socialist' used in the Preamble to the Constitution", "(b) (a) read with Article 14 of the Constitution", "(c) (a) read with Article 16 of the Constitution", "(d) (a), (b) and (c) all read together"], 3, "In Randhir Singh v. Union of India (1982), the Supreme Court read the Preamble's 'Socialist' goal together with Articles 14, 16, and 39(d) to enforce 'Equal Pay for Equal Work'."],
+  [10, "U.P.P.C.S. (Pre) 1998", "58. Consider the following statements about the Fundamental Rights in India:\n1. They are a guarantee against state action\n2. They are enumerated in Part III of the Constitution\n3. They ensure social, economic and political justice.\n4. They are unlike Bill of Rights in the U.S.A.\nNow, select the correct answer from the code given below:", ["(a) 1 and 2 are correct", "(b) 2 and 3 are correct", "(c) 1, 2 and 3 are correct", "(d) 2, 3 and 4 are correct"], 2, "Statements 1, 2, and 3 are correct; statement 4 is incorrect because India's Fundamental Rights were directly modeled on the US Bill of Rights."],
+  [10, "U.P.P.C.S. (Pre) 1998", "59. Which of the following has been recognized as a fundamental right by the Supreme Court of India?\n1. Right to Shelter\n2. Right to Travel Abroad\n3. Right to Equal Pay for Equal Work\nSelect the correct answer from the code given below:", ["(a) 1 and 2", "(b) 2 and 3", "(c) 1 and 3", "(d) 1, 2 and 3"], 3, "All three—Right to Shelter (Chameli Singh case), Right to Travel Abroad (Maneka Gandhi case), and Equal Pay for Equal Work (Randhir Singh case)—have been recognized by the Supreme Court."],
+  [10, "U.P.P.C.S. (Pre) 1997", "60. Which one of the following fundamental rights was amended as a result of the decision of the Supreme Court of India in 'State of Madras Vs. Champakam Dorairajan' case:", ["(a) Right to equality before law", "(b) Right against discrimination", "(c) Right against untouchability", "(d) Right to freedom of speech and expression"], 1, "Following State of Madras v. Champakam Dorairajan (1951), Parliament enacted the 1st Constitutional Amendment Act, 1951, adding Article 15(4) under the Right against Discrimination."],
+  [10, "U.P.P.C.S. (Pre) 1997", "61. Which Article of the Indian Constitution protects person's right to travel abroad:", ["(a) 14", "(b) 19", "(c) 21", "(d) None of the above"], 2, "In Satwant Singh Sawhney (1967) and Maneka Gandhi (1978), the Supreme Court held that the right to travel abroad is part of 'personal liberty' under Article 21."],
+  [10, "U.P.P.C.S. (Pre) 1997", "62. Which of the following rights can be enforced under Article 32 of the Indian Constitution?", ["(a) Constitutional Rights", "(b) Fundamental Rights", "(c) Statutory Rights", "(d) All of the above"], 1, "The writ jurisdiction of the Supreme Court under Article 32 can be invoked exclusively for the enforcement of Fundamental Rights guaranteed by Part III."],
+  [10, "U.P.P.C.S. (Pre) 1992, 1996", "63. Right to Property is a -", ["(a) Fundamental Right", "(b) Natural Right", "(c) Statutory Right", "(d) Legal Right"], 2, "Note: Official PDF Answer Key marks (c) Statutory Right (since the 44th Amendment 1978 removed it from Fundamental Rights and placed it as a constitutional/legal right under Article 300A)."],
+  [10, "U.P.P.C.S. (Pre) 1992", "64. Prohibition and abolishment of untouchability may be achieved by-\n1. Making laws\n2. Improving Education\n3. Public Awareness\n4. Providing Jobs/Services", ["(a) 1, 2, and 3", "(b) 2, 3 and 4", "(c) 1 and 2", "(d) 2 and 4"], 0, "Eradicating untouchability requires strict legislative enforcement (1), educational advancement (2), and social/public awareness (3)."],
+
+  // ================= 12. Directive Principles of State Policy (29 Qs) =================
+  [11, "U.P.P.C.S. (Pre) 2025", "1. Given below are two statements, one is labelled as Assertion (A) and the other as Reason (R).\nAssertion (A): Directive Principles are important for economic, social and political functions in a Modern Democratic State.\nReason (R): The core objectives of Directive Principles is to establish economic and social democracy.\nSelect the correct answer from the code given below:", ["(a) Both (A) and (R) are true, but (R) is not the correct explanation of (A).", "(b) (A) is false, but (R) is true.", "(c) (A) is true, but (R) is false.", "(d) Both (A) and (R) are true and (R) is the correct explanation of (A)."], 3, "Both statements are true, and establishing social and economic democracy (as emphasized by Dr. B.R. Ambedkar) is the core reason why DPSPs are vital to governance."],
+  [11, "UP R.O./A.R.O. (Pre) 2023", "2. Consider the following statements with respect to Directive Principles of State Policy:\n1. They are not enforceable by the Courts.\n2. It shall be the duty of the State to apply these Principles in making laws.\nSelect the correct answer using the code given below:", ["(a) Only 2", "(b) Both 1 and 2", "(c) Only 1", "(d) Neither 1 nor 2"], 1, "Article 37 explicitly declares both principles: DPSPs are non-enforceable by any court, yet they are fundamental in the governance of the country and it is the duty of the State to apply them in making laws."],
+  [11, "U.P.P.C.S. (Pre.) 2023", "3. Which of the following Provision is a part of both Directive Principles of State Policy and Fundamental Duties?", ["(a) Participation of workers in management of industries", "(b) Protection of environment", "(c) Guardians to provide opportunity for education to children", "(d) Uniform Civil Code"], 1, "Protection and improvement of the environment, forests, and wildlife appears in both DPSP (Article 48A) and Fundamental Duties [Article 51A(g)]."],
+  [11, "U.P.P.C.S. (Pre) 2021", "4. Which one of the following is NOT correctly matched? (Subject - Related Articles)", ["(a) The separation of judiciary from executive - Article 50", "(b) The promotion of educational and economic interests of Scheduled Castes and Scheduled Tribes - Article 46", "(c) The promotion of Co-operative Societies - Article 43A", "(d) The organisation of Village Panchayats and enable them to function as the units of self government - Article 40"], 2, "Promotion of Co-operative Societies is under Article 43B (added by the 97th Amendment), whereas Article 43A deals with participation of workers in management of industries."],
+  [11, "U.P. P.C.S. (Pre) 2020", "5. Which one of the following is NOT correctly matched?", ["(a) Article 39A - Equal Justice and free legal aid", "(b) Article 40 - Organisation of Village Panchayats", "(c) Article 44 - Uniform Civil Code", "(d) Article 48 - Separation of Judiciary from Executive"], 3, "Separation of Judiciary from Executive is provided in Article 50, not Article 48."],
+  [11, "U.P. P.C.S. (Pre) 2019; U.P. Lower Sub. (Pre) 2009", "6. Which of the following Article was inserted by the 42nd Constitution Amendment to provide for participation of workers in management?", ["(a) Article 38", "(b) Article 39A", "(c) Article 45", "(d) Article 43A"], 3, "Article 43A was inserted by the 42nd Amendment Act, 1976 to direct the State to take steps to secure the participation of workers in the management of industries."],
+  [11, "U.P.P.C.S. (Pre) 2019", "7. In which of the following 'the provisions for the protection and improvement of environment and safeguarding of forests and wildlife' are found in the Constitution of India?", ["(a) Only in the Directive Principles of State Policy", "(b) Only in the Fundamental Duties", "(c) Both (a) and (b)", "(d) None of the above"], 2, "Both Article 48A (DPSP) and Article 51A(g) (Fundamental Duties) mandate the protection and improvement of the environment, forests, and wildlife."],
+  [11, "U.P.P.C.S. (Pre) 2018", "8. The Directive Principles of State Policy may be classified in to which of the following parts for the sake of convenient study?", ["(a) Socialist", "(b) Liberal intellectualistic", "(c) Gandhian", "(d) All of the above"], 3, "Although the Constitution does not classify DPSPs, constitutional scholars categorize them into three ideological groups: Socialistic, Gandhian, and Liberal-Intellectual principles."],
+  [11, "U.P.R.O./A.R.O. (Mains) 2013; U.P.P.C.S. (Mains) 2017", "9. Which one of the following is not the objective of the Directive Principles of State Policy?", ["(a) To establish a welfare State.", "(b) To ensure socio-economic Justice", "(c) To establish a Religious State", "(d) To establish a Secular State"], 2, "Establishing a religious or theocratic state is antithetical to the Indian Constitution and DPSPs."],
+  [11, "U.P.P.S.C. (GIC) 2017; U.P.P.C.S. (Pre) 2014", "10. Which one of the following Articles directs State Government to organize Village Panchayats?", ["(a) Article 32", "(b) Article 40", "(c) Article 48", "(d) Article 51"], 1, "Article 40 directs the State to take steps to organize village panchayats and endow them with powers to function as units of self-government."],
+  [11, "U.P. P.C.S. (Mains) 2017", "11. Which part of the Indian Constitution refers to the responsibility of the state towards International Peace and Security?", ["(a) Fundamental Rights", "(b) Fundamental Duties", "(c) Directive Principles of State Policy", "(d) Preamble of the Constitution"], 2, "Article 51 in Part IV (Directive Principles of State Policy) directs the State to promote international peace and security."],
+  [11, "U.P.P.C.S. (Mains) 2005; U.P.P.C.S. (Pre) 1994; U.P. Lower Sub. (Pre) 2015", "12. The Directive Principles of State Policy of the Constitution of India is taken from the Constitution of which country?", ["(a) Australia", "(b) America", "(c) France", "(d) Ireland"], 3, "The Directive Principles of State Policy were borrowed from the Constitution of Ireland."],
+  [11, "U.P.P.C.S. (Mains) 2014", "13. Which of the following is not a Fundamental Right?", ["(a) Right Against Exploitation", "(b) Equal Pay for Equal Work", "(c) Equality Before Law", "(d) Right to Freedom of Religion"], 1, "'Equal pay for equal work for both men and women' is enumerated as a Directive Principle of State Policy under Article 39(d), not a standalone Fundamental Right in Part III."],
+  [11, "U.P.R.O./A.R.O. (Pre) 2014", "14. Which of the following Directive Principles of State Policy was added to the Constitution at a later date?", ["(a) Organization of Village Panchayats", "(b) Prohibition of Cow Slaughter", "(c) Free Legal Aid", "(d) Uniform Civil Code"], 2, "Equal justice and free legal aid (Article 39A) was added later by the 42nd Constitutional Amendment Act, 1976."],
+  [11, "U.P. Lower Sub. (Mains) 2013", "15. Given below are two statements, one labelled as Assertion (A) and the other as Reason (R):\nAssertion (A): MGNREGA is providing employment to at least one member of the eligible household for a minimum period of 100 days in a year.\nReason (R): Right to employment is enumerated in Part III of the Constitution.\nSelect the correct answer from the code given below:", ["(a) Both (A) and (R) are true, and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true, but (R) is not a correct explanation of (A).", "(c) (A) is true, but (R) is false.", "(d) (A) is false, but (R) is true."], 2, "Assertion (A) is true, but Reason (R) is false because the Right to Work is enumerated in Part IV (DPSP, Article 41), not Part III (Fundamental Rights)."],
+  [11, "U.P. Lower Sub. (Pre) 2004; U.P.P.C.S. (Pre) 1998; U.P. U.D.A./L.D.A (Mains) 2010", "16. 'Equal Pay for Equal Work' has been ensured in the Indian Constitution as one of the:", ["(a) Fundamental Rights", "(b) Directive Principles of State Policy", "(c) Fundamental Duties", "(d) Economic Rights"], 1, "Article 39(d) under Directive Principles of State Policy mandates equal pay for equal work for both men and women."],
+  [11, "U.P. U.D.A./L.D.A. (Pre) 2010; U.P. Lower Sub. (Pre) 2009", "17. MANREGA scheme has been launched as a part of implementing which one of the following Articles of the Indian Constitution?", ["(a) Article 43", "(b) Article 45", "(c) Article 47", "(d) Article 50"], 0, "MGNREGA implements the constitutional directive of providing work, living wage, and decent standard of life under Article 43 (alongside Article 41)."],
+  [11, "U.P. U.D.A./L.D.A. (Pre) 2010", "18. Which one of the following is not a Directive Principle of State Policy?", ["(a) Prohibition of the consumption of Intoxicating Drinks", "(b) Cow-Protection", "(c) Environment-Protection", "(d) Free Education to children up to the age of fourteen (14)"], 3, "After the 86th Amendment Act (2002), free and compulsory education for children aged 6–14 was shifted to Article 21A (Fundamental Right), while Article 45 was amended to cover early childhood care below age 6."],
+  [11, "U.P.P.C.S. (Pre) 2006; U.P.P.C.S. (Mains) 2010", "19. Which of the following is not included in the Directive Principles of State Policy?", ["(a) Prohibition of Liquor", "(b) Right to Work", "(c) Equal Wage for Equal Work", "(d) Right to Information"], 3, "Right to Information is a statutory right (RTI Act, 2005) and an implied Fundamental Right under Article 19(1)(a), not a DPSP."],
+  [11, "U.P.P.C.S. (Mains) 2010; U.P.P.S.C. (GIC) 2010", "20. Which one of the following is a Directive Principle of the State Policy?", ["(a) Uniform Civil Code", "(b) Freedom of the Press", "(c) Freedom of the Religion", "(d) Equality Before Law"], 0, "Uniform Civil Code for the citizens is provided under Article 44 in Part IV (DPSP)."],
+  [11, "U.P.P.C.S. (Mains) 2009", "21. The Constitution grants right against exploitation to\n1. Children\n2. Women\n3. Tribals\n4. Dalits\nChoose your correct answer with the help of given code:", ["(a) 1 and 2 only", "(b) 1 and 3 only", "(c) 1, 2 and 3 only", "(d) 2, 3 and 4 only"], 2, "Note: Matched to official PDF Answer Key (c) 1, 2 and 3 only (reflecting explicit constitutional safeguards against exploitation for children, women/trafficking victims, and tribal communities)."],
+  [11, "U.P. Lower Sub (Pre) 2008", "22. The Constitution is silent in the Directive Principles of State Policy about -", ["(a) Adult education", "(b) Living wages for workers", "(c) Free legal aid to the poor", "(d) Primary education to children till they complete the age of 6 years"], 0, "While living wages (Art. 43), free legal aid (Art. 39A), and early childhood education below age 6 (Art. 45) are in DPSP, 'Adult education' is not mentioned."],
+  [11, "U.P. Lower (Spl) (Pre) 2008", "23. Which one of the following is not a Directive Principle of State Policy?", ["(a) Equal pay for equal work for men and women", "(b) Equal right to an adequate means of livelihood", "(c) Abolition of Untouchability", "(d) Just and humane conditions of work"], 2, "Abolition of Untouchability (Article 17) is an enforceable Fundamental Right in Part III, not a DPSP."],
+  [11, "U.P.P.C.S. (Mains) 2007", "24. \"The Directive Principles of State Policy is a cheque which is paid on Bank's Convenience,\" Who said it?", ["(a) B.R. Ambedkar", "(b) K.M. Munshi", "(c) Dr. Rajendra Prasad", "(d) K.T. Shah"], 3, "Prof. K.T. Shah, a member of the Constituent Assembly, criticized the non-justiciable nature of DPSPs by calling them 'a cheque on a bank payable only when the resources of the bank permit.'"],
+  [11, "U.P. Lower Sub. (Pre) 2004", "25. The concept of welfare state is included in the Constitution of India in the:", ["(a) Directive Principles of State Policy", "(b) Fourth Schedule of the Constitution", "(c) Fundamental Rights", "(d) Preamble of the Constitution"], 0, "Part IV (Directive Principles of State Policy), particularly Article 38, embodies the ideal of a Welfare State."],
+  [11, "U.P. Lower Sub. (Pre) 2004", "26. Directive Principles of State Policy are-", ["(a) Justiciable", "(b) Non-Justiciable", "(c) Fundamental Rights", "(d) None of these"], 1, "Under Article 37, Directive Principles of State Policy are non-justiciable (cannot be enforced in a court of law)."],
+  [11, "U.P.P.C.S. (Pre) 2001; U.P.U.D.A./L.D.A. (Pre) 2002", "27. Match List-I with List-II and select the correct answer using the code given below:\nList-I (Articles of the Constitution):\nA. Art. 40\nB. Art. 41\nC. Art. 44\nD. Art. 48\nList - II (Subject matter):\n1. Organization of Village Panchayat\n2. Right to Work\n3. Uniform Civil Code\n4. Organisation of Agriculture and Animal Husbandry", ["(a) A-1, B-2, C-3, D-4", "(b) A-2, B-3, C-1, D-4", "(c) A-1, B-3, C-4, D-2", "(d) A-3, B-2, C-4, D-1"], 0, "Art. 40: Village Panchayat (1); Art. 41: Right to Work (2); Art. 44: Uniform Civil Code (3); Art. 48: Agriculture & Animal Husbandry (4)."],
+  [11, "U.P.P.C.S. (Mains) 2002", "28. Identify the items included in the Directive Principles of State Policy.\n1. Prohibition of Consumption of Liquor\n2. Prohibition of employment of children in factories or mines\n3. Prohibition of beggar or forced labour\n4. Prohibition of untouchability\nSelect the correct answer with the help of the code given below:", ["(a) 1 and 2", "(b) 1, 2 and 3", "(c) Only 1", "(d) 2, 3 and 4"], 2, "Only item 1 (Prohibition of intoxicating drinks under Article 47) is a DPSP; items 2 (Art. 24), 3 (Art. 23), and 4 (Art. 17) are Fundamental Rights."],
+  [11, "U.P.P.C.S. (Pre) 1998", "29. Which of the following was not added to the Directive Principles by the 42nd Amendment of the Constitution?", ["(a) Protection of Children and youth from exploitation", "(b) Equal justice and free legal aid", "(c) Uniform civil code", "(d) Participation of workers in the management of industries"], 2, "Uniform Civil Code (Article 44) was part of the original Constitution of 1950, whereas Arts. 39(f), 39A, 43A, and 48A were added by the 42nd Amendment (1976)."],
+
+  // ================= 13. The Governance System (37 Qs) =================
+  [12, "U.P.P.C.S. (Pre) 2025", "1. Given below are two statements, one is labelled as Assertion (A) and the other as Reason (R).\nAssertion (A): India has a Parliamentary system of Government.\nReason (R): In India, the executive is responsible to the legislature.\nSelect the correct answer from the code given below:", ["(a) Both (A) and (R) are true, but (R) is not the correct explanation of (A).", "(b) (A) is false, but (R) is true.", "(c) (A) is true, but (R) is false.", "(d) Both (A) and (R) are true and (R) is the correct explanation of (A)."], 3, "The defining hallmark of a Parliamentary system is the collective responsibility of the Executive (Council of Ministers) to the Legislature (Lok Sabha under Article 75(3))."],
+  [12, "U.P.P.C.S. (Pre) 2024", "2. Match List-I with List-II and choose the correct answer using the codes given below the lists:\nList-I:\nA. Cooperative Federalism\nB. Bargaining Federalism\nC. Quasi Federalism\nD. Federalism with Centralising Tendency\nList-II:\n1. K.C. Wheare\n2. Ivor Jennings\n3. Morris-Jones\n4. Granville Austin", ["(a) A-2, B-4, C-3, D-1", "(b) A-2, B-1, C-4, D-3", "(c) A-4, B-3, C-1, D-2", "(d) A-3, B-2, C-4, D-1"], 2, "Cooperative Federalism: Granville Austin (4); Bargaining Federalism: Morris-Jones (3); Quasi Federalism: K.C. Wheare (1); Federation with centralising tendency: Ivor Jennings (2)."],
+  [12, "U.P.R.O./A.R.O. (Pre) (Re-Exam) 2023", "3. Which of the following scholars used the term 'Quasi-Federal' for the Indian constitutional system?", ["(a) B.R. Ambedkar", "(b) Jawaharlal Nehru", "(c) K.C. Wheare", "(d) Laski"], 2, "Prof. K.C. Wheare famously described the Indian Constitution as 'quasi-federal'—a unitary state with subsidiary federal features."],
+  [12, "U.P.P.C.S. (Pre) 2020", "4. Given below are two statements, one is labelled as Assertion (A) and the other as Reason (R):\nAssertion (A): The nature of Indian Political System embodies the elements of 'continuity and change'.\nReason (R): The Indian Political System contains the elements of the following political system such as the modern style, the traditional style and saint style.\nSelect the correct answer from the codes given below.", ["(a) Both (A) and (R) are true and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true but (R) is not the correct explanation of (A).", "(c) (A) is true but (R) is false.", "(d) (A) is false but (R) is true."], 0, "Political scientist W.H. Morris-Jones analyzed Indian politics as blending modern, traditional, and saintly idioms, creating a unique balance of continuity and change."],
+  [12, "U.P.P.C.S. (Pre) 2020", "5. Given below are two statements, one is labelled as Assertion (A) and the other as Reason (R):\nAssertion (A): Indian federalism is called 'Quasifederal'.\nReason (R): India has an independent judiciary with power of Judicial Review.\nSelect the correct answer from the codes given below.", ["(a) Both (A) and (R) are true and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true but (R) is not the correct explanation of (A).", "(c) (A) is true but (R) is false.", "(d) (A) is false but (R) is true."], 1, "Both statements are true, but India is called 'quasi-federal' due to its strong unitary bias (single citizenship, strong Centre, emergency powers), not because of judicial review."],
+  [12, "U.P.P.S.C. (GIC) 2010; U.P.P.C.S. (Pre) 2019", "6. Who said: \"India is a quasi-federal state\"?", ["(a) Harold Laski", "(b) Ivor Jennings", "(c) Lord Bryce", "(d) K.C. Wheare"], 3, "K.C. Wheare coined the phrase 'quasi-federal state' to characterize India's federal setup."],
+  [12, "U.P.P.C.S. (Pre) 2018", "7. The Parliamentary form of Government was first introduced in which country?", ["(a) Great Britain (UK)", "(b) Belgium", "(c) France", "(d) Switzerland"], 0, "The Parliamentary (Westminster) model of government originated and evolved first in Great Britain (UK)."],
+  [12, "U.P. P.C.S. (Mains) 2017", "8. With reference to the Sovereignty of India, which of the following statements is/are correct?\n1. India is a member of Commonwealth of Nations.\n2. Sovereignty of India is curtailed due to its membership of Commonwealth of Nations.\nSelect the correct answer using the codes given below:", ["(a) 1 only", "(b) 2 only", "(c) 1 & 2 both", "(d) Neither 1 nor 2"], 0, "India is a voluntary member of the Commonwealth of Nations (1 is true), and this free association does not affect or curtail India's sovereign status in any way (2 is false)."],
+  [12, "U.P. P.C.S. (Mains) 2017", "9. The Central and State governments get authority from?", ["(a) Indian Constitution", "(b) President of India", "(c) Prime Minister of India", "(d) Indian Parliament"], 0, "Both the Union and State governments derive their powers and authority directly from the Constitution of India."],
+  [12, "U.P.P.C.S. (Pre) 2017", "10. Consider the following statements and choose the correct answer by using the codes given below:\nAssertion (A): India is a democratic country.\nReason (R): India has a constitution of its own.", ["(a) Both (A) and (R) are true and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true but (R) is not the correct explanation of (A).", "(c) (A) is true but (R) is false.", "(d) Both (A) and (R) are false."], 1, "Both (A) and (R) are true, but merely having a written constitution does not automatically make a country democratic (non-democratic states can also have constitutions); universal adult franchise and elected governance make India a democracy."],
+  [12, "U.P.P.C.S. (Pre) 2017", "11. Of the following political features, which is/are common to India and the USA.\n1. Residuary powers vested in the centre.\n2. Residuary powers vested in the states.\n3. President has the power of pocket veto.\n4. The upper house has some nominated members.", ["(a) 3 only", "(b) 3 and 4 only", "(c) 2, 3 and 4 only", "(d) 1, 3 and 4 only"], 0, "Only statement 3 is common: both the Indian President and US President possess the power of pocket veto. (Residuary powers are with the Centre in India and States in the USA; US Senate has no nominated members)."],
+  [12, "U.P. Lower Sub. (Mains) 2015", "12. Which one of the following is not the Philosophy of the Constitution of India?", ["(a) Welfare State", "(b) Socialist State", "(c) Political Equality", "(d) Communist State"], 3, "The Indian Constitution envisages a democratic, socialist, secular welfare state with political equality—not a Communist State."],
+  [12, "U.P.P.C.S. (Mains) 2015", "13. Which one of the following is not the feature of Indian Constitution?", ["(a) Parliamentary Government", "(b) Presidential Government", "(c) Independence of Judiciary", "(d) Federal Government"], 1, "India follows a Parliamentary system of government at both the Union and State levels, not a Presidential system."],
+  [12, "U.P.P.C.S. (Pre) (Re. Exam) 2015", "14. Which of the following is not a federal feature of the Indian Constitution?", ["(a) Distribution of power between Centre and States", "(b) Entirely written Constitution", "(c) Single Citizenship", "(d) Independent Judiciary"], 2, "Single citizenship is a unitary (non-federal) feature of the Indian Constitution, unlike true federations such as the USA which have dual citizenship."],
+  [12, "U.P.P.C.S. (Mains) 2014", "15. Which of the following is correct? The main feature of a Presidential form of Government is/are -", ["(a) The Head of the Executive is the President.", "(b) The President appoints his Council of Ministers.", "(c) The President cannot dissolve the Legislature.", "(d) All of the above."], 3, "In a Presidential system (such as the USA), the President is the real executive head, appoints cabinet secretaries directly, and cannot dissolve the legislature due to strict separation of powers."],
+  [12, "U.P.P.C.S. (Mains) 2013", "16. Which of the following is supreme in the Indian political system?", ["(a) Supreme Court", "(b) Constitution", "(c) Parliament", "(d) Religion"], 1, "Constitutional supremacy prevails in India: the Constitution is the supreme law of the land, binding on Parliament, the Executive, and the Judiciary alike."],
+  [12, "U.P. P.C.S. (Mains) 2012", "17. Consider the following statements:\n1. India is a democratic polity.\n2. India is a sovereign state.\n3. India has a democratic society.\n4. India is a welfare state.\nWhich of the above statements are true?", ["(a) 1 and 2 only", "(b) 1, 2 and 3 only", "(c) 2, 3 and 4 only", "(d) 1, 2, 3 and 4"], 3, "All four statements accurately describe the constitutional character of India."],
+  [12, "U.P.P.C.S. (Mains) 2012", "18. Indian Constitution is -", ["(a) Rigid", "(b) Flexible", "(c) Neither rigid nor flexible", "(d) Partly rigid and partly flexible"], 3, "The Indian Constitution is a unique synthesis of rigidity and flexibility: some provisions can be amended by simple majority, while others require a special majority and state ratification under Article 368."],
+  [12, "U.P.P.C.S (Mains) 2011", "19. Which one of the following is not a feature of Indian polity?", ["(a) A Government following the Constitution", "(b) Democratic Government", "(c) Rule of Law", "(d) Authoritarian Government"], 3, "Authoritarian government is contrary to India's constitutional democracy based on Rule of Law."],
+  [12, "U.P.P.C.S. (Mains) 2010", "20. Which one of the following points differentiates the Indian Parliamentary system and British Parliamentary System?", ["(a) Collective Responsibility", "(b) Judicial Review", "(c) Bicameral Legislature", "(d) Real and nominal Executive"], 1, "Unlike Britain where Parliamentary Sovereignty prevails without judicial invalidation of Acts of Parliament, India has Judicial Review under a written Constitution."],
+  [12, "U.P.U.D.A./L.D.A. (Mains) 2010", "21. Which one of the following is not true in relation to democratic determination.", ["(a) A state in which people are supreme", "(b) Supreme power is vested in elected head", "(c) Supreme power is vested in a person (solely) likewise a king", "(d) A government formed by representatives elected by people"], 2, "Vesting absolute supreme power in a single hereditary or autocratic ruler like a king is monarchy/autocracy, not democracy."],
+  [12, "U.P. Lower Sub. (Pre) 2008; U.P.P.C.S. (Pre) 2009", "22. The cardinal features of political system in India are\n1. It is a democratic republic.\n2. It has a Parliamentary form of government.\n3. The supreme power vests in People of India.\n4. It provides for a unified authority.\nSelect the correct answer from the code given below:", ["(a) 1 and 2", "(b) 1, 2 and 3", "(c) 2, 3 and 4", "(d) All the four"], 1, "Statements 1, 2, and 3 are cardinal features of India's political system; statement 4 is incorrect because India has a federal division of authority between Union and States."],
+  [12, "U.P.P.C.S. (Pre) 2009", "23. Here are two statements:\nAssertion (A): Political Parties are life-blood of democracy.\nReason (R): Normally people blame political parties for bad governance.\nWhich of the following is correct in above context-", ["(a) Both (A) and (R) are true, and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true, but (R) is not a correct explanation of (A).", "(c) (A) is true, but (R) is wrong.", "(d) (A) is wrong, but (R) is true"], 0, "Note: Matched to official PDF Answer Key (a)—because political parties aggregate public opinion, form governments, and are held accountable by voters for governance."],
+  [12, "U.P.P.C.S. (Pre) 2008", "24. Which one is the most prominent element of a state?", ["(a) Flag", "(b) Capital", "(c) Sovereignty", "(d) Head of State"], 2, "Among the four essential elements of a State (population, territory, government, and sovereignty), Sovereignty is the supreme and most essential distinguishing element."],
+  [12, "U.P.P.C.S. (Spl) (Mains) 2008", "25. Which one of the following is incorrect about the Indian Political System?", ["(a) Secular State", "(b) Parliamentary System of the Government", "(c) Federal Policy", "(d) Presidential System of the Government"], 3, "India does not have a Presidential System of Government."],
+  [12, "U.P.P.C.S. (Spl.) (Mains) 2008", "26. Who of the following has stated that 'The Constitution has not been set in a tight mould of federalism'?", ["(a) D.D. Basu", "(b) K.M. Munshi", "(c) B.R. Ambedkar", "(d) K.S. Aiyer"], 2, "Dr. B.R. Ambedkar stated in the Constituent Assembly that the Indian Constitution 'has not been set in a tight mould of federalism' and can become both unitary and federal according to requirements."],
+  [12, "U.P.P.C.S. (Spl) (Mains) 2008", "27. In which of the following decades the Parliamentary System in India shifted from Centralism to Federalism?", ["(a) 1960's", "(b) 1970's", "(c) 1980's", "(d) None of these"], 0, "Following the 1967 general elections when non-Congress regional parties came to power in several states, Centre-State dynamics began shifting from single-party centralism toward competitive federalism in the late 1960s."],
+  [12, "U.P.P.C.S. (Pre) 2007", "28. Assertion (A): Indian Constitution is quasi-federal.\nReason (R): Indian Constitution is neither federal nor unitary.\nSelect the correct answer using the codes given below:", ["(a) Both (A) and (R) are true, and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are true, but (R) is not the correct explanation of (A).", "(c) (A) is true, but (R) is false.", "(d) (A) is false, but (R) is true."], 0, "Because the Indian Constitution combines both federal and unitary features rather than being purely federal or purely unitary, it is described as quasi-federal."],
+  [12, "U.P.P.C.S. (Mains) 2006", "29. Which one of the following is a basic feature of the Presidential Government?", ["(a) Rigid Constitution", "(b) Single Executive", "(c) Supremacy of the Legislature", "(d) Residual Powers of the States"], 1, "A Single Executive (where the President is both Head of State and Head of Government) is a core feature of the Presidential system."],
+  [12, "U.P.P.C.S. (Pre) 2005", "30. In a Presidential Government, all the executive powers are vested in -", ["(a) President", "(b) Cabinet", "(c) Legislature", "(d) Upper House"], 0, "In a Presidential system, all executive powers are concentrated in the President."],
+  [12, "U.P.P.C.S. (Pre) 2005", "31. Which one of the following statements is correct?", ["(a) The Constitution of India is Presidential", "(b) India is a titular monarchy", "(c) India is an aristocracy", "(d) India is a Parliamentary Democracy"], 3, "India is a Parliamentary Democracy with an elected Head of State (Republic)."],
+  [12, "U.P.P.C.S. (Mains) 2005", "32. In relation to Indian Constitution who said that \"Indian Constitution establishes good balance between Rigidity and Flexibility.\"", ["(a) B.R. Ambedkar", "(b) M.P. Payli", "(c) Alexandrovics", "(d) K.C. Wheare"], 3, "K.C. Wheare praised the Indian Constitution for striking a good balance between extreme rigidity and excessive flexibility."],
+  [12, "U.P.P.C.S. (Mains) 2004", "33. Which of the following statements about the federal system in India are correct?\n1. The Constitution introduces a federal system as the basic structure of Government.\n2. There is a strong admixture of a unitary bias.\n3. Both the Union and State Legislatures are sovereign.\n4. The legislative, financial and judicial powers have been divided between the Union and its units.\nSelect the correct answer from the codes given below:", ["(a) 1 only", "(b) 1 and 2 only", "(c) 1, 2 and 3 only", "(d) all the four"], 1, "Statements 1 and 2 are correct. Statement 3 is wrong because legislatures are bound by the Constitution (not sovereign), and statement 4 is wrong because India has an integrated judiciary (judicial powers are not divided)."],
+  [12, "U.P.P.C.S. (Pre) 1997", "34. 'India is a Republic' means -", ["(a) It is the people who are the final authority in all matters.", "(b) There is no Parliamentary System of Government in India.", "(c) There are no hereditary rulers in India.", "(d) India is the Union of States."], 2, "A 'Republic' means that the Head of the State (the President) is elected directly or indirectly for a fixed tenure and is not a hereditary monarch."],
+  [12, "U.P.P.C.S. (Pre) 1997", "35. The reason for the Indian Constitution being the bulkiest is that: (Official Key marked *)", ["(a) it incorporates the experience of many Constitutions", "(b) it contains detailed administrative provisions.", "(c) it deals with the Government of a large country.", "(d) it contains the Constitution of both Union and State Governments."], -1, "Note: Marked (*) in official PDF Answer Key because all four factors collectively contribute to the bulkiness of the Indian Constitution."],
+  [12, "U.P.P.C.S. (Pre) 1995", "36. Consider the following statements and select the correct answer from the code given at the end:\nAssertion (A): The Constitution of India provides for a federal system.\nReason (R): It has created a very strong centre.", ["(a) Both (A) and (R) are true, and R is correct explanation of A.", "(b) Both (A) and (R) are true, but R is not the correct explanation of A.", "(c) (A) is true (R) is false.", "(d) (A) is false (R) is true."], 1, "Both statements are true, but creating a strong Centre is a unitary feature rather than the explanation for India being a federal system."],
+  [12, "U.P.P.C.S. (Pre) 1990", "37. Constitution of India provides which type of governance system?", ["(a) Democratic", "(b) Presidential", "(c) Parliamentary", "(d) Semi-democratic"], 2, "The Constitution of India establishes a Parliamentary system of governance both at the Centre and in the States."],
+
+  // ================= 14. Constitutional Amendment (28 Qs) =================
+  [13, "U.P.P.C.S. (Pre) 2024", "1. Consider the following statements: An Amendment to the Constitution of India can be initiated by the:\n1. Lok Sabha\n2. Rajya Sabha\n3. State Legislatures\n4. President of India\nWhich of the above statements is/are correct?", ["(a) 1, 2 and 3", "(b) 1 and 2", "(c) Only 1", "(d) 2, 3 and 4"], 1, "Under Article 368, a Constitutional Amendment Bill can be initiated only in either House of Parliament (Lok Sabha or Rajya Sabha)—not in State Legislatures."],
+  [13, "U.P.P.C.S. (Pre) 2024", "2. Match the Amendments with their year of implementation:\nA. 42nd Amendment\nB. 52nd Amendment\nC. 86th Amendment\nD. 96th Amendment\nList-II:\n1. 1985\n2. 2011\n3. 1976\n4. 2002", ["(a) A-2, B-1, C-3, D-4", "(b) A-4, B-3, C-2, D-1", "(c) A-1, B-2, C-3, D-4", "(d) A-3, B-1, C-4, D-2"], 3, "42nd Amendment: 1976 (3); 52nd Amendment: 1985 (1); 86th Amendment: 2002 (4); 96th Amendment (Odia language spelling): 2011 (2)."],
+  [13, "U.P.P.C.S. (Pre) 2024", "3. Identify the correct chronological sequence of the following:\n1. Shankari Prasad vs. Union of India\n2. Sajjan Singh vs. State of Rajasthan\n3. Golaknath vs. State of Punjab\n4. Kesavananda Bharati vs. State of Kerala\nSelect the correct answer from the codes given below:", ["(a) 1, 4, 3, 2", "(b) 3, 2, 1, 4", "(c) 1, 2, 3, 4", "(d) 3, 4, 2, 1"], 2, "Exact chronological order of landmark cases: Shankari Prasad (1951 - 1) -> Sajjan Singh (1965 - 2) -> Golaknath (1967 - 3) -> Kesavananda Bharati (1973 - 4)."],
+  [13, "U.P. P.C.S. (Pre) 2021; U.P.P.C.S. (Mains) 2014", "4. By which Constitutional Amendment Act was the voting age reduced from 21 years to 18 years?", ["(a) 66th Amendment", "(b) 62nd Amendment", "(c) 61st Amendment", "(d) 63rd Amendment"], 2, "The 61st Constitutional Amendment Act, 1988 (effective March 1989) amended Article 326 to lower the voting age from 21 to 18 years."],
+  [13, "U.P.P.C.S. (Pre) 2021", "5. Consider the following and arrange these in chronological order:\nI. Golak Nath Case\nII. Keshavanand Bharti Case\nIII. 24th Constitution Amendment Act\nIV. 42nd Constitution Amendment Act\nSelect the correct answer from the codes given below.", ["(a) I, III, II, IV", "(b) I, II, III, IV", "(c) III, I, II, IV", "(d) III, I, IV, II"], 0, "Chronological sequence: Golaknath Case (1967 - I) -> 24th Amendment Act (1971 - III) -> Kesavananda Bharati Case (1973 - II) -> 42nd Amendment Act (1976 - IV)."],
+  [13, "U.P.P.C.S. (Pre) 2017", "6. Match List-I with List-II and select the correct answer from the code given below:\nList-I:\nA. Curtailment of the power of judicial review\nB. Abolition of Right to property as a fundamental right\nC. Lowering the voting age from 21 to 18\nD. Addition of the word 'Secular' in the preamble\nList-II:\n1. 61st Amendment\n2. 42nd Amendment\n3. 38th Amendment\n4. 44th Amendment", ["(a) A-1, B-2, C-4, D-3", "(b) A-2, B-4, C-1, D-3", "(c) A-3, B-4, C-1, D-2", "(d) A-4, B-1, C-3, D-2"], 2, "Curtailment of judicial review: 38th Amendment (3); Abolition of Right to Property: 44th Amendment (4); Lowering voting age: 61st Amendment (1); 'Secular' in Preamble: 42nd Amendment (2)."],
+  [13, "U.P.P.C.S. (Pre) (Re. Exam) 2015; U.P. P.C.S. (Mains) 2017", "7. By which Constitutional Amendment the number of Central Ministers has been limited to 15% of the total number of the members of the Lok Sabha?", ["(a) 91st Amendment", "(b) 92nd Amendment", "(c) 90th Amendment", "(d) None of the above"], 0, "The 91st Constitutional Amendment Act, 2003 inserted Article 75(1A), capping the total number of Ministers (including the PM) at 15% of the total strength of the Lok Sabha."],
+  [13, "U.P.R.O./A.R.O. (Pre) 2016", "8. The authoritative text of the Indian Constitution in Hindi was authorized to be published by which of the following constitutional amendments?", ["(a) 57th Amendment, 1987", "(b) 58th Amendment, 1987", "(c) 59th Amendment, 1988", "(d) 60th Amendment, 1988"], 1, "The 58th Constitutional Amendment Act, 1987 inserted Article 394A providing for the authoritative text of the Constitution in the Hindi language."],
+  [13, "U.P.P.C.S. (Mains) 2016", "9. By which of the following amendments of the Indian Constitution, the term 'Co-operative Societies' was added in Article 19(1)(c)?", ["(a) 42nd Amendment Act, 1976", "(b) 73rd Amendment Act, 1993", "(c) 97th Amendment Act, 2011", "(d) 36th Amendment Act, 1975"], 2, "The 97th Constitutional Amendment Act, 2011 added the right to form co-operative societies under Article 19(1)(c), inserted Article 43B, and added Part IX-B."],
+  [13, "U.P.P.C.S. (Pre) 2016", "10. According to Article 243(ZJ) of the Indian Constitution, maximum number of directors of a cooperative society can be -", ["(a) 21", "(b) 15", "(c) 11", "(d) 7"], 0, "Under Article 243ZJ(1), the board of a co-operative society shall consist of such number of directors as may be provided by the State Legislature, provided that the maximum number of directors shall not exceed 21."],
+  [13, "U.P. R.O./A.R.O. (Mains) 2016", "11. Match List-I with List-II and select the correct answer from the code given below the lists.\nList-I (Act):\nA. The Constitution (Ninety Fourth Amendment) Act, 2006\nB. The Constitution (Ninety Fifth Amendment) Act, 2009\nC. The Constitution (Ninety Sixth Amendment) Act, 2011\nD. The Constitution (One hundred third Amendment) Act, 2019\nList-II (Amendment):\n1. Amendment in Article 164\n2. Amendment in Article 334\n3. Amendment in Eighth Schedule\n4. Amendment in Article 15", ["(a) A-1, B-2, C-3, D-4", "(b) A-1, B-2, C-4, D-3", "(c) A-1, B-3, C-4, D-2", "(d) A-1, B-4, C-3, D-2"], 0, "94th Amendment (2006): Art. 164 (1); 95th Amendment (2009): Art. 334 (2); 96th Amendment (2011): 8th Schedule (3); 103rd Amendment (2019 EWS): Art. 15 & 16 (4)."],
+  [13, "U.P.P.C.S. (Pre) 2015", "12. Statement (A): Under Article 368, Parliament can amend any part of the Constitution.\nReason (R): Parliament is the highest legislative body elected by the people of India.\nUsing the code given below, choose the correct answer:", ["(a) Both (A) and (R) are correct, and (R) is the correct explanation of (A).", "(b) Both (A) and (R) are correct, but (R) is not the correct explanation of (A).", "(c) (A) is correct, but (R) is incorrect.", "(d) (A) is incorrect, but (R) is correct."], 0, "Under Article 368, Parliament can amend any part of the Constitution (subject to the Basic Structure doctrine) by virtue of being the supreme elected representative legislature of India."],
+  [13, "U.P.P.C.S. (Mains) 2009; U.P. Lower Sub. (Pre) 2015", "13. By which one of the following Constitutional Amendments Delhi became 'National Capital Region'?", ["(a) 61st Amendment", "(b) 69th Amendment", "(c) 71st Amendment", "(d) 79th Amendment"], 1, "The 69th Constitutional Amendment Act, 1991 conferred special status on Delhi as the National Capital Territory (NCT)."],
+  [13, "U.P.P.C.S. (Mains) 2014", "14. How many Constitutional Amendments in India have been implemented up to 2013?", ["(a) 68", "(b) 78", "(c) 88", "(d) 98"], 3, "Up to 2013, 98 Constitutional Amendment Acts had been enacted (the 98th Amendment Act, 2012 inserted Article 371J for Hyderabad-Karnataka)."],
+  [13, "U.P. U.D.A./L.D.A. (Pre) 2013", "15. The amendment of the Constitution can be initiated in", ["(a) only in the Lok Sabha", "(b) only in the Rajya Sabha", "(c) only in the State Legislative Assemblies", "(d) in any one House of Parliament"], 3, "A Bill to amend the Constitution under Article 368 can be introduced in either House of Parliament (Lok Sabha or Rajya Sabha)."],
+  [13, "U.P.P.C.S. (Mains) 2009", "16. The First Constitution Amendment Bill passed in 1951 was related to", ["(a) Security of the country", "(b) Security of the Prime Minister", "(c) Protection of agrarian reforms in certain States", "(d) Scheduled castes and Scheduled tribes"], 2, "The First Amendment Act, 1951 inserted Articles 31A, 31B, and the Ninth Schedule primarily to protect state agrarian and land reform laws from judicial invalidation."],
+  [13, "U.P.P.C.S. (Mains) 2009", "17. Which Amendment of the Constitution provides that no law passed to give effect to Directive Principles of State Policy contained in Articles 39(b) & (c) shall be deemed to be void on the ground that it abridges the rights conferred by Articles 14 and 19?", ["(a) 25th Amendment", "(b) 28th Amendment", "(c) 42nd Amendment", "(d) 44th Amendment"], 0, "The 25th Constitutional Amendment Act, 1971 inserted Article 31C protecting laws giving effect to Articles 39(b) and 39(c) from challenge under Articles 14 and 19."],
+  [13, "U.P.P.C.S. (Pre) 1992, 1996; U.P.P.C.S. (Mains) 2008", "18. Which of the following has banned floor crossing by the member elected on a party ticket to the legislature?", ["(a) 54th Constitutional Amendment Act", "(b) 53rd Constitutional Amendment Act", "(c) 52nd Constitutional Amendment Act", "(d) 51st Constitutional Amendment Act"], 2, "The 52nd Constitutional Amendment Act, 1985 introduced the Anti-Defection Law in the Tenth Schedule."],
+  [13, "U.P.P.C.S. (Mains) 2008", "19. The 79th Amendment of the Indian Constitution is related to", ["(a) Centre-State Relations", "(b) Establishment of two political parties", "(c) Fundamental Rights", "(d) Reservation of SCs and STs in the Lok Sabha and State Legislative Assemblies"], 3, "The 79th Amendment Act, 1999 extended reservation of seats for SCs and STs (and Anglo-Indians) in the Lok Sabha and State Legislative Assemblies for another ten years (up to 2010)."],
+  [13, "U.P.P.C.S. (Mains) 2007", "20. Which one of the following Bills must be passed by each House of the Indian Parliament separately by the special majority?", ["(a) Ordinary Bill", "(b) Money Bill", "(c) Finance Bill", "(d) Constitution Amendment Bill"], 3, "Under Article 368, a Constitution Amendment Bill must be passed separately by each House by a special majority (majority of total membership and two-thirds of members present and voting), with no provision for a joint sitting."],
+  [13, "U.P. P.C.S. (Mains) 2006", "21. Which Amendment to the Constitution inserted a new Article 21 A in the Constitution providing Right to Education?", ["(a) 86th Amendment", "(b) 87th Amendment", "(c) 88th Amendment", "(d) 89th Amendment"], 0, "The 86th Constitutional Amendment Act, 2002 inserted Article 21A making elementary education (ages 6–14) a Fundamental Right."],
+  [13, "U.P. U.D.A./L.D.A. (Pre) 2006", "22. Sikkim became a new State by -", ["(a) 30th Amendment of the Constitution", "(b) 34th Amendment of the Constitution", "(c) 35th Amendment of the Constitution", "(d) 36th Amendment of the Constitution"], 3, "Sikkim became the 22nd full-fledged State of the Indian Union through the 36th Constitutional Amendment Act, 1975."],
+  [13, "U.P.P.C.S. (Pre) 2005", "23. The Keshavananda Bharati Case is important because-", ["(a) It sets aside the orders of the executive", "(b) The Supreme Court interpreted the basic features of the Constitution", "(c) It brought the Union Government in the dock.", "(d) None of the above"], 1, "In Kesavananda Bharati (1973), the Supreme Court propounded the 'Basic Structure Doctrine', ruling that Parliament's amending power cannot destroy the basic features of the Constitution."],
+  [13, "U.P.P.C.S. Lower (Pre) 2004", "24. According to the Indian Constitution, the Constitutional amendment of the following topics requires consent of at least half of State legislatures-\n1. Federal provision of the Constitution\n2. Rights of the Supreme Court\n3. The process of Constitutional Amendment\n4. Formation of new States or transformation in the borders and names of the states", ["(a) 1, 2, 3", "(b) 1, 2, 4", "(c) 1, 3, 4", "(d) 2, 3, 4"], 0, "Items 1, 2, and 3 fall under the proviso to Article 368(2) requiring ratification by at least half of the State Legislatures. Item 4 (Article 3) requires only a simple majority of Parliament."],
+  [13, "U.P.P.C.S (Mains) 2004", "25. In the event of the Upper House rejecting a Constitutional Amendment Bill passed by the Lower House", ["(a) The Bill will have to be dropped", "(b) A joint sitting of the both Houses of Parliament may be convened to consider and pass the Bill", "(c) The Bill shall be deemed to have been passed by both the Houses of the Parliament if the Lok Sabha passes it again by a two-third majority.", "(d) The Bill shall be deemed to have been passed by both the Houses of the Parliament despite the disapproval of the Bill by the Upper House."], 0, "Each House must pass a Constitution Amendment Bill separately; there is no joint sitting under Article 108 for amendment bills, so rejection by Rajya Sabha ends the bill."],
+  [13, "U.P. Lower Sub. (Spl) (Pre) 2004", "26. Which of the following statements about Sikkim are true?\nI. It became an integral part of India in 1975.\nII. It is considered as a botanist's paradise.\nIII. Its population is mainly made up of the Lepchas.\nSelect the correct answer from the code given below:", ["(a) I", "(b) I and II", "(c) II and III", "(d) I, II and III"], 3, "All three statements are correct: Sikkim merged with India in 1975, is renowned as a botanist's paradise for its biodiversity, and Lepchas are its indigenous inhabitants."],
+  [13, "U.P. Lower Sub. (Pre) 2003", "27. Which of the following Constitutional Amendment is related to the Fundamental Duties?", ["(a) 42nd", "(b) 44th", "(c) 46th", "(d) 50th"], 0, "The 42nd Constitutional Amendment Act, 1976 (on the recommendation of the Swaran Singh Committee) added Part IV-A (Article 51A) containing Fundamental Duties."],
+  [13, "U.P.P.C.S. (Mains) 2002", "28. In which of the following cases the Supreme Court limited the power of Parliament to amend the Constitution for the first time?", ["(a) A.K. Gopalan Vs. The State of Madras", "(b) Golaknath Vs. The State of Punjab", "(c) Keshavananda Bharati Vs. The State of Kerala", "(d) Minerva Mills Vs. The Union of India"], 1, "In I.C. Golaknath v. State of Punjab (1967), an 11-judge Supreme Court bench ruled for the first time that Parliament could not amend or abridge Fundamental Rights."],
+];
+
+// Build structured objects for all 319 questions
+const QUESTIONS = RAW_QUESTIONS.map((item, idx) => ({
+  id: idx,
+  categoryIndex: item[0],
+  category: CATEGORIES[item[0]],
+  source: item[1],
+  question: item[2],
+  options: item[3],
+  correctIndex: item[4],
+  explanation: item[5]
+}));
+
+// ============================================================================
+// STATE MANAGEMENT & LOCALSTORAGE AUTO-SAVE
+// ============================================================================
+const STORAGE_KEY = "indian_polity_319_quiz_state_v1";
+
+let state = {
+  answers: {},          // { [questionId]: selectedOptionIndex }
+  marked: {},           // { [questionId]: true }
+  currentFilteredIdx: 0,
+  selectedCategory: "ALL",
+  mode: "practice",     // "practice" | "exam"
+  paletteFilter: "all", // "all" | "unanswered" | "marked"
+  reviewFilter: "all",
+  reviewCategory: "ALL",
+  submitted: false
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state = { ...state, ...parsed };
+    }
+  } catch (e) {
+    console.warn("Unable to read saved state:", e);
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const indicator = document.getElementById("saveIndicator");
+    if (indicator) {
+      indicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Saved just now`;
+      clearTimeout(window._saveTimer);
+      window._saveTimer = setTimeout(() => {
+        indicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Auto-Saved`;
+      }, 1500);
+    }
+  } catch (e) {
+    console.warn("Unable to save state:", e);
+  }
+}
+
+function getFilteredQuestions() {
+  if (state.selectedCategory === "ALL") return QUESTIONS;
+  const catIdx = parseInt(state.selectedCategory, 10);
+  return QUESTIONS.filter(q => q.categoryIndex === catIdx);
+}
+
+// ============================================================================
+// INITIALIZATION & UI RENDERING
+// ============================================================================
+function initApp() {
+  loadState();
+  populateCategoryDropdowns();
+  updateModeButtons();
+  if (state.submitted) {
+    showResultsView(false);
+  } else {
+    renderQuiz();
+  }
+}
+
+function populateCategoryDropdowns() {
+  const mainSelect = document.getElementById("categorySelect");
+  const revSelect = document.getElementById("reviewCategoryFilter");
+
+  let mainHtml = `<option value="ALL">All Topics Combined (${QUESTIONS.length} Questions)</option>`;
+  let revHtml = `<option value="ALL">All 14 Topics (${QUESTIONS.length} Qs)</option>`;
+
+  CATEGORIES.forEach((cat, idx) => {
+    const count = QUESTIONS.filter(q => q.categoryIndex === idx).length;
+    mainHtml += `<option value="${idx}">${cat} (${count} Qs)</option>`;
+    revHtml += `<option value="${idx}">${cat} (${count} Qs)</option>`;
+  });
+
+  mainSelect.innerHTML = mainHtml;
+  revSelect.innerHTML = revHtml;
+
+  mainSelect.value = state.selectedCategory;
+  revSelect.value = state.reviewCategory;
+}
+
+function changeCategory(val) {
+  state.selectedCategory = val;
+  state.currentFilteredIdx = 0;
+  saveState();
+  if (!document.getElementById("resultsWorkspace").classList.contains("hidden")) {
+    backToQuiz();
+  } else {
+    renderQuiz();
+  }
+}
+
+function setMode(newMode) {
+  state.mode = newMode;
+  saveState();
+  updateModeButtons();
+  renderQuiz();
+}
+
+function updateModeButtons() {
+  const pBtn = document.getElementById("modePracticeBtn");
+  const eBtn = document.getElementById("modeExamBtn");
+  const liveScoreWrap = document.getElementById("practiceLiveScoreWrap");
+
+  if (state.mode === "practice") {
+    pBtn.className = "px-3 py-1.5 rounded-lg font-semibold transition bg-indigo-600 text-white shadow";
+    eBtn.className = "px-3 py-1.5 rounded-lg font-semibold transition text-slate-300 hover:text-white";
+    liveScoreWrap.classList.remove("hidden");
+  } else {
+    eBtn.className = "px-3 py-1.5 rounded-lg font-semibold transition bg-indigo-600 text-white shadow";
+    pBtn.className = "px-3 py-1.5 rounded-lg font-semibold transition text-slate-300 hover:text-white";
+    liveScoreWrap.classList.add("hidden");
+  }
+}
+
+function renderQuiz() {
+  const filtered = getFilteredQuestions();
+  if (filtered.length === 0) return;
+
+  if (state.currentFilteredIdx >= filtered.length) {
+    state.currentFilteredIdx = 0;
+  }
+
+  const q = filtered[state.currentFilteredIdx];
+  const userAns = state.answers[q.id];
+  const isAnswered = userAns !== undefined;
+  const isMarked = !!state.marked[q.id];
+
+  // Update Header & Meta Badges
+  document.getElementById("qNumberBadge").textContent =
+    `Question ${state.currentFilteredIdx + 1} of ${filtered.length} (Global #${q.id + 1})`;
+  document.getElementById("qCategoryBadge").textContent = q.category;
+  document.getElementById("qExamSourceBadge").textContent = q.source;
+  document.getElementById("questionText").textContent = q.question;
+
+  // Update Mark for Review button
+  const markBtn = document.getElementById("markReviewBtn");
+  if (isMarked) {
+    markBtn.textContent = "★ Marked for Review";
+    markBtn.className = "px-3.5 py-2.5 rounded-xl border border-amber-500 bg-amber-400 text-slate-900 font-bold text-xs sm:text-sm transition shadow-xs";
+  } else {
+    markBtn.textContent = "☆ Mark for Review";
+    markBtn.className = "px-3.5 py-2.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-xs sm:text-sm transition";
+  }
+
+  // Render Options
+  const optionsContainer = document.getElementById("optionsContainer");
+  optionsContainer.innerHTML = "";
+
+  q.options.forEach((optText, optIdx) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.onclick = () => selectOption(optIdx);
+
+    let cardClass = "option-card w-full text-left p-4 rounded-xl border-2 flex items-start gap-3.5 font-medium text-sm sm:text-base ";
+
+    if (state.mode === "practice" && isAnswered) {
+      // Immediate visual feedback in Practice Mode
+      if (q.correctIndex === -1) {
+        if (userAns === optIdx) {
+          cardClass += "border-amber-500 bg-amber-50 text-amber-900";
+        } else {
+          cardClass += "border-slate-200 bg-slate-50/60 text-slate-600";
+        }
+      } else if (optIdx === q.correctIndex) {
+        cardClass += "border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold";
+      } else if (optIdx === userAns && userAns !== q.correctIndex) {
+        cardClass += "border-rose-500 bg-rose-50 text-rose-950";
+      } else {
+        cardClass += "border-slate-200 bg-white text-slate-500 opacity-75";
+      }
+    } else {
+      // Exam Mode or Unanswered in Practice Mode
+      if (userAns === optIdx) {
+        cardClass += "border-indigo-600 bg-indigo-50/80 text-indigo-950 font-semibold shadow-xs";
+      } else {
+        cardClass += "border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50 text-slate-800";
+      }
+    }
+
+    btn.className = cardClass;
+
+    // Badge icon/letter
+    const letters = ["A", "B", "C", "D"];
+    let badgeHtml = `<span class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 `;
+    if (state.mode === "practice" && isAnswered && q.correctIndex !== -1) {
+      if (optIdx === q.correctIndex) {
+        badgeHtml += `bg-emerald-600 text-white">✓</span>`;
+      } else if (optIdx === userAns) {
+        badgeHtml += `bg-rose-600 text-white">✕</span>`;
+      } else {
+        badgeHtml += `bg-slate-200 text-slate-600">${letters[optIdx]}</span>`;
+      }
+    } else if (userAns === optIdx) {
+      badgeHtml += `bg-indigo-600 text-white">${letters[optIdx]}</span>`;
+    } else {
+      badgeHtml += `bg-slate-100 text-slate-700">${letters[optIdx]}</span>`;
+    }
+
+    btn.innerHTML = `
+      ${badgeHtml}
+      <span class="flex-1 leading-snug">${escapeHtml(optText)}</span>
+    `;
+    optionsContainer.appendChild(btn);
+  });
+
+  // Explanation Box (Practice Mode when answered)
+  const expBox = document.getElementById("explanationBox");
+  if (state.mode === "practice" && isAnswered) {
+    expBox.classList.remove("hidden");
+    const statusTitle = document.getElementById("explanationStatusTitle");
+    const keyBadge = document.getElementById("officialKeyBadge");
+    const expText = document.getElementById("explanationText");
+
+    if (q.correctIndex === -1) {
+      expBox.className = "rounded-xl p-4 mb-6 border border-amber-300 bg-amber-50/90 text-sm leading-relaxed";
+      statusTitle.textContent = "★ Official Key Note (Disputed / Deleted Question)";
+      statusTitle.className = "font-bold text-sm text-amber-800";
+      keyBadge.textContent = "PDF Key: (*)";
+      keyBadge.className = "text-xs font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300";
+    } else if (userAns === q.correctIndex) {
+      expBox.className = "rounded-xl p-4 mb-6 border border-emerald-300 bg-emerald-50/90 text-sm leading-relaxed";
+      statusTitle.textContent = "✓ Correct Answer!";
+      statusTitle.className = "font-bold text-sm text-emerald-800";
+      keyBadge.textContent = `Official Key: (${["a","b","c","d"][q.correctIndex]})`;
+      keyBadge.className = "text-xs font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300";
+    } else {
+      expBox.className = "rounded-xl p-4 mb-6 border border-rose-300 bg-rose-50/90 text-sm leading-relaxed";
+      statusTitle.textContent = "✕ Incorrect Answer";
+      statusTitle.className = "font-bold text-sm text-rose-800";
+      keyBadge.textContent = `Official Key: (${["a","b","c","d"][q.correctIndex]})`;
+      keyBadge.className = "text-xs font-semibold px-2 py-0.5 rounded bg-rose-100 text-rose-900 border border-rose-300";
+    }
+    expText.textContent = q.explanation;
+  } else {
+    expBox.classList.add("hidden");
+  }
+
+  // Prev / Next button states
+  document.getElementById("prevBtn").disabled = state.currentFilteredIdx === 0;
+  document.getElementById("nextBtn").disabled = state.currentFilteredIdx === filtered.length - 1;
+
+  updateStatsAndGrid();
+}
+
+function selectOption(optIdx) {
+  const filtered = getFilteredQuestions();
+  const q = filtered[state.currentFilteredIdx];
+  state.answers[q.id] = optIdx;
+  saveState();
+  renderQuiz();
+}
+
+function clearCurrentResponse() {
+  const filtered = getFilteredQuestions();
+  const q = filtered[state.currentFilteredIdx];
+  delete state.answers[q.id];
+  saveState();
+  renderQuiz();
+}
+
+function toggleMarkReview() {
+  const filtered = getFilteredQuestions();
+  const q = filtered[state.currentFilteredIdx];
+  if (state.marked[q.id]) {
+    delete state.marked[q.id];
+  } else {
+    state.marked[q.id] = true;
+  }
+  saveState();
+  renderQuiz();
+}
+
+function navigateQuestion(delta) {
+  const filtered = getFilteredQuestions();
+  const nextIdx = state.currentFilteredIdx + delta;
+  if (nextIdx >= 0 && nextIdx < filtered.length) {
+    state.currentFilteredIdx = nextIdx;
+    saveState();
+    renderQuiz();
+  }
+}
+
+function jumpToFilteredIndex(idx) {
+  state.currentFilteredIdx = idx;
+  saveState();
+  renderQuiz();
+}
+
+function setPaletteFilter(filter) {
+  state.paletteFilter = filter;
+  ["palAll", "palUnanswered", "palMarked"].forEach(id => {
+    const el = document.getElementById(id);
+    el.className = "px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium";
+  });
+  const activeId = filter === "all" ? "palAll" : filter === "unanswered" ? "palUnanswered" : "palMarked";
+  document.getElementById(activeId).className = "px-2.5 py-1 rounded-lg bg-slate-800 text-white font-medium";
+  updateStatsAndGrid();
+}
+
+function updateStatsAndGrid() {
+  const filtered = getFilteredQuestions();
+  const totalGlobal = QUESTIONS.length;
+  const answeredGlobal = Object.keys(state.answers).length;
+  const markedGlobal = Object.keys(state.marked).length;
+
+  let correctGlobal = 0;
+  for (const [qIdStr, ansIdx] of Object.entries(state.answers)) {
+    const qObj = QUESTIONS[parseInt(qIdStr, 10)];
+    if (qObj && (qObj.correctIndex === -1 || qObj.correctIndex === ansIdx)) {
+      correctGlobal++;
+    }
+  }
+
+  document.getElementById("topAnsweredCount").textContent = answeredGlobal;
+  document.getElementById("topTotalCount").textContent = totalGlobal;
+  document.getElementById("topMarkedCount").textContent = markedGlobal;
+  document.getElementById("topScoreCount").textContent = correctGlobal;
+
+  // Filtered palette counts
+  let fAnswered = 0;
+  let fMarked = 0;
+  filtered.forEach(q => {
+    if (state.answers[q.id] !== undefined) fAnswered++;
+    if (state.marked[q.id]) fMarked++;
+  });
+
+  document.getElementById("gridFilterCount").textContent = `${filtered.length} Qs`;
+  document.getElementById("legendAnswered").textContent = fAnswered;
+  document.getElementById("legendMarked").textContent = fMarked;
+  document.getElementById("legendUnanswered").textContent = filtered.length - fAnswered;
+
+  // Render Grid Buttons
+  const grid = document.getElementById("questionGrid");
+  grid.innerHTML = "";
+
+  filtered.forEach((q, idx) => {
+    const isAns = state.answers[q.id] !== undefined;
+    const isMark = !!state.marked[q.id];
+    const isCurr = idx === state.currentFilteredIdx;
+
+    if (state.paletteFilter === "unanswered" && isAns) return;
+    if (state.paletteFilter === "marked" && !isMark) return;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = idx + 1;
+    btn.title = `Q${idx + 1} (Global #${q.id + 1}) - ${q.category}`;
+    btn.onclick = () => jumpToFilteredIndex(idx);
+
+    let cls = "grid-btn h-9 rounded-lg text-xs font-bold flex items-center justify-center relative ";
+    if (isCurr) {
+      cls += "ring-2 ring-indigo-600 ring-offset-1 ";
+    }
+
+    if (isMark && isAns) {
+      cls += "bg-amber-400 text-slate-900 border border-emerald-600";
+    } else if (isMark) {
+      cls += "bg-amber-400 text-slate-900";
+    } else if (isAns) {
+      if (state.mode === "practice") {
+        const isRight = q.correctIndex === -1 || state.answers[q.id] === q.correctIndex;
+        cls += isRight ? "bg-emerald-500 text-white" : "bg-rose-500 text-white";
+      } else {
+        cls += "bg-emerald-500 text-white";
+      }
+    } else {
+      cls += isCurr ? "bg-indigo-100 text-indigo-800" : "bg-slate-100 hover:bg-slate-200 text-slate-700";
+    }
+
+    btn.className = cls;
+    grid.appendChild(btn);
+  });
+}
+
+// ============================================================================
+// RESULTS & ANALYTICS SCREEN
+// ============================================================================
+function showResultsView(persist = true) {
+  if (persist) {
+    state.submitted = true;
+    saveState();
+  }
+
+  document.getElementById("quizWorkspace").classList.add("hidden");
+  document.getElementById("resultsWorkspace").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  computeAnalytics();
+  renderDetailedReview();
+}
+
+function backToQuiz() {
+  state.submitted = false;
+  saveState();
+  document.getElementById("resultsWorkspace").classList.add("hidden");
+  document.getElementById("quizWorkspace").classList.remove("hidden");
+  renderQuiz();
+}
+
+function computeAnalytics() {
+  let correct = 0;
+  let incorrect = 0;
+  let skipped = 0;
+
+  const catStats = CATEGORIES.map((name, idx) => ({
+    name,
+    idx,
+    total: 0,
+    correct: 0,
+    incorrect: 0,
+    skipped: 0
+  }));
+
+  QUESTIONS.forEach(q => {
+    const cs = catStats[q.categoryIndex];
+    cs.total++;
+    const ans = state.answers[q.id];
+
+    if (ans === undefined) {
+      skipped++;
+      cs.skipped++;
+    } else if (q.correctIndex === -1 || ans === q.correctIndex) {
+      correct++;
+      cs.correct++;
+    } else {
+      incorrect++;
+      cs.incorrect++;
+    }
+  });
+
+  const attempted = correct + incorrect;
+  const accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+
+  document.getElementById("resTotalQs").textContent = QUESTIONS.length;
+  document.getElementById("resCorrect").textContent = correct;
+  document.getElementById("resIncorrect").textContent = incorrect;
+  document.getElementById("resSkipped").textContent = skipped;
+  document.getElementById("resAccuracy").textContent = `${accuracy}%`;
+
+  const tbody = document.getElementById("categoryBreakdownBody");
+  tbody.innerHTML = "";
+
+  catStats.forEach(cs => {
+    const pct = cs.total > 0 ? Math.round((cs.correct / cs.total) * 100) : 0;
+    const tr = document.createElement("tr");
+    tr.className = "hover:bg-slate-50/80";
+    tr.innerHTML = `
+      <td class="py-3 px-4 font-semibold text-slate-800">${escapeHtml(cs.name)}</td>
+      <td class="py-3 px-3 text-center font-medium text-slate-600">${cs.total}</td>
+      <td class="py-3 px-3 text-center font-bold text-emerald-600">${cs.correct}</td>
+      <td class="py-3 px-3 text-center font-bold text-rose-600">${cs.incorrect}</td>
+      <td class="py-3 px-3 text-center text-slate-500">${cs.skipped}</td>
+      <td class="py-3 px-4 w-44">
+        <div class="flex items-center gap-2">
+          <div class="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div class="h-full bg-indigo-600 rounded-full" style="width: ${pct}%"></div>
+          </div>
+          <span class="text-xs font-bold text-slate-700 w-9 text-right">${pct}%</span>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function setReviewFilter(filter) {
+  state.reviewFilter = filter;
+  ["revFilterAll", "revFilterIncorrect", "revFilterCorrect", "revFilterSkipped"].forEach(id => {
+    document.getElementById(id).classList.remove("ring-2", "ring-indigo-500");
+  });
+  const map = {
+    all: "revFilterAll",
+    incorrect: "revFilterIncorrect",
+    correct: "revFilterCorrect",
+    skipped: "revFilterSkipped"
+  };
+  document.getElementById(map[filter]).classList.add("ring-2", "ring-indigo-500");
+  renderDetailedReview();
+}
+
+function renderDetailedReview() {
+  const catFilter = document.getElementById("reviewCategoryFilter").value;
+  state.reviewCategory = catFilter;
+
+  const container = document.getElementById("detailedReviewList");
+  container.innerHTML = "";
+
+  const filtered = QUESTIONS.filter(q => {
+    if (catFilter !== "ALL" && q.categoryIndex !== parseInt(catFilter, 10)) return false;
+    const ans = state.answers[q.id];
+    const isSkipped = ans === undefined;
+    const isCorrect = !isSkipped && (q.correctIndex === -1 || ans === q.correctIndex);
+    const isIncorrect = !isSkipped && !isCorrect;
+
+    if (state.reviewFilter === "correct" && !isCorrect) return false;
+    if (state.reviewFilter === "incorrect" && !isIncorrect) return false;
+    if (state.reviewFilter === "skipped" && !isSkipped) return false;
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="text-center py-10 text-slate-500 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+        No questions match the selected filter criteria.
+      </div>
+    `;
+    return;
+  }
+
+  filtered.forEach(q => {
+    const ans = state.answers[q.id];
+    const isSkipped = ans === undefined;
+    const isCorrect = !isSkipped && (q.correctIndex === -1 || ans === q.correctIndex);
+
+    let statusBadge = "";
+    let borderClass = "border-slate-200";
+
+    if (isSkipped) {
+      statusBadge = `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600">Unattempted</span>`;
+    } else if (isCorrect) {
+      statusBadge = `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800">✓ Correct</span>`;
+      borderClass = "border-emerald-200";
+    } else {
+      statusBadge = `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-100 text-rose-800">✕ Incorrect</span>`;
+      borderClass = "border-rose-200";
+    }
+
+    const userAnsText = isSkipped ? "Not Answered" : q.options[ans];
+    const officialAnsText = q.correctIndex === -1
+      ? "(*) Disputed / Deleted in Official PDF Key"
+      : q.options[q.correctIndex];
+
+    const card = document.createElement("div");
+    card.className = `p-5 rounded-2xl border ${borderClass} bg-white shadow-2xs`;
+    card.innerHTML = `
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">Global Q#${q.id + 1}</span>
+          <span class="text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg">${escapeHtml(q.category)}</span>
+          <span class="text-xs text-slate-400">${escapeHtml(q.source)}</span>
+        </div>
+        ${statusBadge}
+      </div>
+      <p class="font-semibold text-slate-900 text-sm sm:text-base whitespace-pre-line-clean mb-3">${escapeHtml(q.question)}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm mb-3">
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="text-slate-500 font-medium block mb-0.5">Your Response:</span>
+          <strong class="${isSkipped ? 'text-slate-500' : isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${escapeHtml(userAnsText)}</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200">
+          <span class="text-emerald-700 font-medium block mb-0.5">Official PDF Answer Key:</span>
+          <strong class="text-emerald-900">${escapeHtml(officialAnsText)}</strong>
+        </div>
+      </div>
+      <div class="p-3.5 rounded-xl bg-indigo-50/50 border border-indigo-100 text-xs sm:text-sm text-slate-700 leading-relaxed">
+        <strong class="text-indigo-900">Explanation:</strong> ${escapeHtml(q.explanation)}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// ============================================================================
+// RESET MODAL & HELPERS
+// ============================================================================
+function openResetModal() {
+  document.getElementById("resetModal").classList.remove("hidden");
+}
+
+function closeResetModal() {
+  document.getElementById("resetModal").classList.add("hidden");
+}
+
+function confirmResetProgress() {
+  localStorage.removeItem(STORAGE_KEY);
+  state = {
+    answers: {},
+    marked: {},
+    currentFilteredIdx: 0,
+    selectedCategory: "ALL",
+    mode: "practice",
+    paletteFilter: "all",
+    reviewFilter: "all",
+    reviewCategory: "ALL",
+    submitted: false
+  };
+  document.getElementById("categorySelect").value = "ALL";
+  closeResetModal();
+  updateModeButtons();
+  backToQuiz();
+}
+
+function escapeHtml(str) {
+  if (typeof str !== "string") return "";
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+window.addEventListener("DOMContentLoaded", initApp);
+</script>
+</body>
+</html>
